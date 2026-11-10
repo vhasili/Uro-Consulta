@@ -78,12 +78,56 @@ button, input, select { font: inherit; color: inherit; }
 .search { display: flex; gap: 8px; align-items: center; }
 .search input { flex: 1; min-width: 0; height: 40px; padding: 0 12px; border: 1px solid var(--line); border-radius: 8px; background: var(--sunken); }
 .search input::placeholder { color: var(--muted); }
-.tabs { display: flex; gap: 2px; overflow-x: auto; scrollbar-width: none; margin-inline: -4px; }
+.tabs { display: flex; flex-wrap: wrap; gap: 0 2px; margin-inline: -4px; }
 .tabs::-webkit-scrollbar { display: none; }
 .tab { flex: none; border: 0; background: none; padding: 9px 12px 11px; color: var(--muted); font-weight: 500; cursor: pointer; border-bottom: 2px solid transparent; white-space: nowrap; }
 .tab[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--accent); }
 .tab:hover { color: var(--ink); }
 body.searching .tab[aria-selected="true"] { border-bottom-color: transparent; color: var(--muted); }
+.search .btn { height: 40px; flex: none; }
+@media (max-width: 599px) {
+  .top { position: static; }
+  .tab { padding: 7px 9px 9px; font-size: 0.88rem; }
+}
+.card-btns { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+
+/* Seguimiento oncológico */
+.fu-b { display: grid; gap: 12px; padding: 0 16px 14px; }
+.fu-g { display: grid; gap: 10px; }
+.fu-g .field { max-width: 560px; }
+.fu-t { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+.fu-t th, .fu-t td { text-align: left; vertical-align: top; padding: 7px 10px; border-bottom: 1px solid var(--line); }
+.fu-t thead th { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); background: var(--sunken); }
+.fu-t tbody th { font-weight: 600; width: 34%; }
+.fu-n { margin: 0; padding-left: 18px; font-size: 0.86rem; color: var(--muted); display: grid; gap: 3px; }
+.card.fu .clip { display: none; }
+@media (max-width: 599px) { .fu-t tbody th { width: 40%; } }
+
+/* Hoja imprimible de cuestionarios */
+#print-sheet { display: none; }
+@media print {
+  body.printing { background: #fff; }
+  body.printing::before { display: none; }
+  body.printing > :not(#print-sheet) { display: none !important; }
+  body.printing #print-sheet { display: block; color: #000; font: 10.5pt/1.35 var(--f-body); }
+  @page { margin: 14mm; }
+}
+.ps-h { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; border-bottom: 1.5pt solid #000; padding-bottom: 4pt; margin-bottom: 8pt; }
+.ps-h h1 { margin: 0; font: 600 15pt/1.2 var(--f-cond); }
+.ps-h span { font-size: 9pt; }
+.ps-id { display: flex; gap: 18pt; margin: 0 0 8pt; font-size: 10.5pt; }
+.ps-id span { flex: 1; border-bottom: 0.75pt solid #000; padding-bottom: 2pt; }
+.ps-intro { margin: 0 0 8pt; font-style: italic; }
+.ps-sub { margin: 10pt 0 4pt; font-weight: 600; }
+.ps-q { break-inside: avoid; margin: 0 0 9pt; }
+.ps-q p { margin: 0 0 4pt; }
+.ps-o { display: flex; flex-wrap: wrap; gap: 3pt 14pt; padding-left: 10pt; }
+.ps-o span::before { content: "\2610  "; font-size: 12pt; }
+.ps-scale { display: flex; flex-wrap: wrap; align-items: center; gap: 4pt 10pt; padding-left: 10pt; }
+.ps-scale b { font-weight: 400; }
+.ps-scale b::before { content: "\2610  "; font-size: 12pt; }
+.ps-scale i { font-size: 9pt; }
+.ps-f { margin-top: 12pt; font-size: 8.5pt; border-top: 0.75pt solid #000; padding-top: 4pt; }
 
 /* Aviso de ejemplos */
 .notice { display: flex; gap: 12px; align-items: center; justify-content: space-between; flex-wrap: wrap; margin-top: 16px; padding: 10px 14px; border: 1px dashed var(--line); border-radius: var(--r); color: var(--muted); font-size: 0.88rem; }
@@ -299,12 +343,14 @@ footer.page strong { color: var(--ink); }
     </div>
     <div class="search">
       <input id="q" type="search" placeholder="Buscar: IPSS, filtrado, PSA, Gleason…" autocomplete="off" aria-label="Buscar calculadora">
+      <button class="btn" id="clear-all" type="button" title="Borra todos los datos para empezar con otro paciente">Vaciar datos</button>
     </div>
     <nav class="tabs" role="tablist" aria-label="Áreas">
       <button class="tab" role="tab" data-tab="prostata" id="tab-prostata">Próstata</button>
       <button class="tab" role="tab" data-tab="onco" id="tab-onco">Oncología avanzada</button>
       <button class="tab" role="tab" data-tab="vejiga" id="tab-vejiga">Vejiga</button>
       <button class="tab" role="tab" data-tab="rinon" id="tab-rinon">Riñón</button>
+      <button class="tab" role="tab" data-tab="seguimiento" id="tab-seguimiento">Seguimiento</button>
       <button class="tab" role="tab" data-tab="funcional" id="tab-funcional">Funcional</button>
       <button class="tab" role="tab" data-tab="andrologia" id="tab-andrologia">Andrología</button>
       <button class="tab" role="tab" data-tab="suelo" id="tab-suelo">Suelo pélvico</button>
@@ -317,8 +363,7 @@ footer.page strong { color: var(--ink); }
 
 <div class="wrap">
   <div class="notice" id="notice">
-    <span><strong>Valores de ejemplo cargados.</strong> Sustitúyelos por los del paciente. Nada de lo que escribes se guarda ni sale de este dispositivo.</span>
-    <button class="btn" id="clear-all" type="button">Vaciar todo</button>
+    <span><strong>Valores de ejemplo cargados.</strong> Sustitúyelos por los del paciente. Nada de lo que escribes se guarda ni sale de este dispositivo. Para empezar con otro paciente, pulsa «Vaciar datos» arriba.</span>
   </div>
 
   <main id="main">
@@ -819,6 +864,78 @@ footer.page strong { color: var(--ink); }
       <div class="ref">Bump et al., Am J Obstet Gynecol 1996. Estadio 0: Aa, Ba, Ap y Bp en −3 y C o D ≤ −(TVL − 2). I: punto más distal &lt; −1. II: entre −1 y +1. III: &gt; +1 y &lt; TVL − 2. IV: ≥ TVL − 2 (eversión completa). El esquema es orientativo y no está a escala anatómica. Para la imagen anatómica, la <a href="https://www.augs.org/education/pop-q/" target="_blank" rel="noopener">herramienta de AUGS</a>.</div>
     </article>
 
+    <article class="card fu" id="c-fu-prostata" data-tab="seguimiento" data-keys="seguimiento prostata psa prostatectomia radioterapia vigilancia activa hormonoterapia adt deprivacion androgenica testosterona">
+      <div class="card-h">
+        <div><span class="kind">Seguimiento · Guías EAU 2026</span><h2>Cáncer de próstata</h2></div>
+        <button class="btn copy" type="button" data-copy="fu-prostata">Copiar</button>
+      </div>
+      <div class="fu-b" id="fu-prostata"></div>
+      <div class="ref">EAU-EANM-ESTRO-ESUR-ISUP-SIOG Guidelines on Prostate Cancer 2026: capítulo 7 (seguimiento) y sección 6.2.1 (vigilancia activa). Orientativo: adaptar a cada paciente.</div>
+    </article>
+
+    <article class="card fu" id="c-fu-nmibc" data-tab="seguimiento" data-keys="seguimiento vejiga nmibc tumor vesical rtu cistoscopia citologia uro-tc riesgo bajo intermedio alto">
+      <div class="card-h">
+        <div><span class="kind">Seguimiento · Guías EAU 2026</span><h2>Vejiga no músculo-invasiva (Ta, T1, CIS)</h2></div>
+        <button class="btn copy" type="button" data-copy="fu-nmibc">Copiar</button>
+      </div>
+      <div class="fu-b" id="fu-nmibc"></div>
+      <div class="ref">EAU Guidelines on Non-muscle-invasive Bladder Cancer 2026: tabla 8.2 y sección 8.2. Recomendaciones débiles, basadas sobre todo en series retrospectivas. Orientativo: adaptar a cada paciente.</div>
+    </article>
+
+    <article class="card fu" id="c-fu-mibc" data-tab="seguimiento" data-keys="seguimiento vejiga mibc cistectomia radical trimodal derivacion urinaria neovejiga conducto ileal b12 tc">
+      <div class="card-h">
+        <div><span class="kind">Seguimiento · Guías EAU 2026</span><h2>Vejiga músculo-invasiva</h2></div>
+        <button class="btn copy" type="button" data-copy="fu-mibc">Copiar</button>
+      </div>
+      <div class="fu-b" id="fu-mibc"></div>
+      <div class="ref">EAU Guidelines on Muscle-invasive and Metastatic Bladder Cancer 2026: capítulo 7. Tras la cistectomía no hay un régimen con beneficio demostrado; el esquema es de consenso del panel (tabla 7.1). Orientativo: adaptar a cada paciente.</div>
+    </article>
+
+    <article class="card fu" id="c-fu-utuc" data-tab="seguimiento" data-keys="seguimiento utuc tracto urinario superior urotelial pelvis ureter nefroureterectomia ureteroscopia uro-tc cistoscopia">
+      <div class="card-h">
+        <div><span class="kind">Seguimiento · Guías EAU 2026</span><h2>Tumor urotelial del tracto urinario superior</h2></div>
+        <button class="btn copy" type="button" data-copy="fu-utuc">Copiar</button>
+      </div>
+      <div class="fu-b" id="fu-utuc"></div>
+      <div class="ref">EAU Guidelines on Upper Urinary Tract Urothelial Carcinoma 2026: sección 8.1 (recomendaciones débiles) y figura 6.1 (estratificación del riesgo). Orientativo: adaptar a cada paciente.</div>
+    </article>
+
+    <article class="card fu" id="c-fu-rinon" data-tab="seguimiento" data-keys="seguimiento rinon renal carcinoma de celulas renales nefrectomia parcial radical leibovich uiss tc">
+      <div class="card-h">
+        <div><span class="kind">Seguimiento · Guías EAU 2026</span><h2>Carcinoma renal localizado</h2></div>
+        <button class="btn copy" type="button" data-copy="fu-rinon">Copiar</button>
+      </div>
+      <div class="fu-b" id="fu-rinon"></div>
+      <div class="ref">EAU Guidelines on Renal Cell Carcinoma 2026: tabla 9.1 (opinión de expertos). Riesgo con el modelo de Leibovich 2003 en células claras (ficha en la pestaña Riñón) y el UISS en no células claras. Orientativo: adaptar a cada paciente.</div>
+    </article>
+
+    <article class="card fu" id="c-fu-testiculo" data-tab="seguimiento" data-keys="seguimiento testiculo seminoma no seminoma germinal marcadores afp hcg ldh orquiectomia vigilancia">
+      <div class="card-h">
+        <div><span class="kind">Seguimiento · Guías EAU 2026</span><h2>Tumores germinales de testículo</h2></div>
+        <button class="btn copy" type="button" data-copy="fu-testiculo">Copiar</button>
+      </div>
+      <div class="fu-b" id="fu-testiculo"></div>
+      <div class="ref">EAU Guidelines on Testicular Cancer 2026: tablas 8 a 10 (seguimiento mínimo, consenso ESMO). La recidiva después de 5 años es rara (≈ 0,5 %). Orientativo: adaptar a cada paciente.</div>
+    </article>
+
+    <article class="card fu" id="c-fu-pene" data-tab="seguimiento" data-keys="seguimiento pene penectomia glandectomia ganglios inguinales linfadenectomia centinela ecografia">
+      <div class="card-h">
+        <div><span class="kind">Seguimiento · Guías EAU 2026</span><h2>Cáncer de pene</h2></div>
+        <button class="btn copy" type="button" data-copy="fu-pene">Copiar</button>
+      </div>
+      <div class="fu-b" id="fu-pene"></div>
+      <div class="ref">EAU-ASCO Guidelines on Penile Cancer 2026: tabla 7.1. Orientativo: adaptar a cada paciente.</div>
+    </article>
+
+    <article class="card fu" id="c-fu-uretra" data-tab="seguimiento" data-keys="seguimiento uretra carcinoma uretral primario uretrocistoscopia">
+      <div class="card-h">
+        <div><span class="kind">Seguimiento · Guías EAU 2026</span><h2>Carcinoma uretral primario</h2></div>
+        <button class="btn copy" type="button" data-copy="fu-uretra">Copiar</button>
+      </div>
+      <div class="fu-b" id="fu-uretra"></div>
+      <div class="ref">EAU Guidelines on Primary Urethral Carcinoma 2026: capítulo 8. Orientativo: adaptar a cada paciente.</div>
+    </article>
+
     <!-- ============ IIEF-5 ============ -->
     <article class="card" id="c-shim" data-tab="andrologia" data-keys="iief-5 iief5 shim disfuncion erectil ereccion andrologia sexual cuestionario">
       <div class="card-h">
@@ -917,6 +1034,29 @@ footer.page strong { color: var(--ink); }
     </article>
 
     <!-- ============ IMDC ============ -->
+    <article class="card" id="c-leib" data-tab="rinon" data-keys="leibovich riesgo de recidiva metastasis carcinoma renal celulas claras ccrcc nefrectomia seguimiento pronostico necrosis grado">
+      <div class="card-h">
+        <div><span class="kind">Pronóstico</span><h2>Leibovich 2003: riesgo de metástasis tras nefrectomía (células claras)</h2></div>
+        <button class="btn copy" type="button" data-copy="leib">Copiar</button>
+      </div>
+      <div class="card-b">
+        <div class="inputs">
+          <div class="row">
+            <label class="field"><span>Estadio pT</span><select id="lb-t"><option value="0">pT1a</option><option value="2" selected>pT1b</option><option value="3">pT2</option><option value="4">pT3–pT4</option></select></label>
+            <label class="field"><span>Ganglios</span><select id="lb-n"><option value="0" selected>pNx / pN0</option><option value="2">pN1</option></select></label>
+            <label class="field"><span>Tamaño tumoral</span><select id="lb-s"><option value="0" selected>&lt; 10 cm</option><option value="1">≥ 10 cm</option></select></label>
+          </div>
+          <div class="row">
+            <label class="field"><span>Grado nuclear (ISUP/Fuhrman)</span><select id="lb-g"><option value="0">1–2</option><option value="1" selected>3</option><option value="3">4</option></select></label>
+            <label class="field"><span>Necrosis tumoral</span><select id="lb-nec"><option value="0" selected>Ausente</option><option value="1">Presente</option></select></label>
+          </div>
+          <div><button class="btn" type="button" id="lb-go">Ver su seguimiento</button></div>
+        </div>
+        <div class="result" aria-live="polite" id="lb-out"></div>
+      </div>
+      <div class="ref">Leibovich et al., Cancer 2003;97:1663-71. Para carcinoma renal de células claras pT1–4 N0/N+ M0 tras nefrectomía radical o parcial. pT1a 0, pT1b 2, pT2 3, pT3–4 4 puntos; pN+ 2; tamaño ≥ 10 cm 1; grado 3 1, grado 4 3; necrosis 1. Riesgo bajo 0–2, intermedio 3–5, alto ≥ 6. Es el modelo que recomienda la guía EAU 2026 (tabla 6.3) para estratificar el seguimiento; en no células claras usa UISS (o VENUSS en papilar).</div>
+    </article>
+
     <article class="card" id="c-imdc" data-tab="rinon" data-keys="imdc heng carcinoma renal metastasico pronostico rinon calcio corregido karnofsky">
       <div class="card-h">
         <div><span class="kind">Clasificación</span><h2>IMDC (Heng): carcinoma renal metastásico</h2></div>
@@ -1465,6 +1605,14 @@ UC.bpic = function (ans) {
   if (!Array.isArray(ans) || ans.length !== 8 || ans.slice(0, 7).some(v => !(Number.isInteger(v) && v >= 0 && v <= 4)) || !(Number.isInteger(ans[7]) && ans[7] >= 0 && ans[7] <= 10)) return null;
   const t = ans.reduce((a, b) => a + b, 0);
   return { total: t, pain: ans[7], positive: t >= 12, label: t >= 12 ? 'Compatible con síndrome de dolor vesical' : 'Por debajo del punto de corte', sev: t >= 12 ? 'risk' : 'ok' };
+};
+
+// Leibovich 2003 (carcinoma renal de células claras): puntos de T, N, tamaño, grado y necrosis.
+UC.leibovich = function ({ t, n, size, grade, necrosis }) {
+  if (![0, 2, 3, 4].includes(t) || ![0, 2].includes(n) || ![0, 1].includes(size) || ![0, 1, 3].includes(grade) || ![0, 1].includes(necrosis)) return null;
+  const score = t + n + size + grade + necrosis;
+  const g = score <= 2 ? [0, 'Riesgo bajo', 'ok'] : score <= 5 ? [1, 'Riesgo intermedio', 'warn'] : [2, 'Riesgo alto', 'risk'];
+  return { score, group: g[0], label: g[1], sev: g[2] };
 };
 
 // Erection Hardness Score (Mulhall 2007), 1–4.
@@ -3512,6 +3660,293 @@ const CTCAE_TAGS = [['A', 'ARTA y ADT'], ['I', 'Inmunoterapia'], ['Q', 'Quimiote
     copyText.eortc = `EORTC: recidiva ${r.rec}/17 (grupo ${r.recGroup}; ${fmt(r.rec1)} % al año, ${fmt(r.rec5)} % a 5 años); progresión ${r.prog}/23 (grupo ${r.progGroup}; ${fmt(r.prog1, r.prog1 < 1 ? 1 : 0)} % al año, ${fmt(r.prog5, r.prog5 < 1 ? 1 : 0)} % a 5 años).`;
   }
 
+  /* ---------- Seguimiento oncológico (Guías EAU 2026) ---------- */
+  // Cada ficha: grupos (desplegables) con escenarios; cada escenario: filas [cuándo, qué pedir] y notas.
+  const FU = {
+    prostata: [{ label: 'Situación', scen: [
+      { n: 'Tras prostatectomía radical', rows: [
+        ['6–8 semanas', 'PSA: debe ser indetectable a los 2 meses'],
+        ['Años 1–3', 'Historia dirigida + PSA cada 6 meses'],
+        ['Desde el año 4', 'Historia + PSA anual'],
+        ['Final', 'Cuando la esperanza de vida sea < 10 años o el paciente ya no sea candidato a rescate'],
+      ], notes: ['El tacto rectal no es necesario si el PSA es indetectable.', 'Imagen (PSMA-PET, TC, gammagrafía, RM) solo si el PSA sube o hay síntomas, y si el resultado va a cambiar el tratamiento.', 'Un PSA > 0,4 ng/mL es el umbral que mejor predice metástasis tras la prostatectomía.', 'Cerca del 50 % de las recidivas aparecen después del tercer año.'] },
+      { n: 'Tras radioterapia', rows: [
+        ['Años 1–3', 'Historia dirigida + PSA cada 6 meses'],
+        ['Desde el año 4', 'Historia + PSA anual'],
+        ['Final', 'Cuando el paciente ya no sea candidato a tratamiento de rescate'],
+      ], notes: ['El PSA baja despacio: el nadir puede tardar 3 años o más. Un nadir < 0,5 ng/mL es favorable.', 'Recidiva bioquímica (Phoenix): nadir + 2 ng/mL, también si llevó hormonoterapia.', 'Imagen solo si el PSA sube o hay síntomas, y si cambia el tratamiento.'] },
+      { n: 'Vigilancia activa', rows: [
+        ['Cada 6 meses (mínimo)', 'PSA (con densidad y cinética)'],
+        ['Anual (mínimo)', 'Tacto rectal (prescindible si se repite la RM de forma programada)'],
+        ['Cada 2–3 años', 'RM (criterios PRECISE) y biopsia dirigida + perilesional de toda lesión PI-RADS ≥ 3. Esquema habitual: biopsias a 1, 4 y 7 años'],
+        ['Si PSA-DT < 3 años', 'RM y biopsia'],
+        ['Final', 'Cuando la esperanza de vida sea < 10 años: pasar a espera vigilante'],
+      ], box: () => `<p class="sub-h">Escala PRECISE <span>cambio en RM seriadas durante la vigilancia activa (Moore 2017)</span></p>` + fuRows([
+        ['PRECISE 1', 'Resolución de las lesiones sospechosas previas'],
+        ['PRECISE 2', 'Reducción del volumen o de la conspicuidad de las lesiones previas'],
+        ['PRECISE 3', 'Estable: sin lesiones nuevas ni cambios en las previas'],
+        ['PRECISE 4', 'Aumento significativo del tamaño o la conspicuidad, o lesión nueva sospechosa'],
+        ['PRECISE 5', 'Progresión radiológica de estadio: extensión extraprostática, invasión de vesículas seminales o adenopatías'],
+      ], ['Categoría', 'Hallazgo']) + `<p class="detail">PRECISE 4–5: biopsia (dirigida + perilesional) antes de cambiar el tratamiento. Una RM estable (1–3) no evita por sí sola la biopsia, salvo bajo riesgo con PSAD &lt; 0,15.</p>`,
+      notes: ['Puede omitirse la biopsia repetida en bajo riesgo con RM estable (PRECISE 3) y densidad de PSA < 0,15.', 'El cambio de tratamiento se basa en la progresión en la biopsia, no en la RM, el PSA o el tacto.', 'La confirmatoria no hace falta si ya hubo RM y biopsia dirigida y perilesional de entrada.'] },
+      { n: 'Hormonoterapia sin metástasis (M0)', rows: [
+        ['Antes de empezar', 'ECG, densitometría ósea, glucemia/HbA1c y lípidos'],
+        ['Cada 6 meses (mínimo)', 'Historia (efectos de la deprivación), PSA, testosterona, función hepática y renal'],
+        ['Periódicamente', 'Hemoglobina, fosfatasa alcalina, perfil lipídico y HbA1c'],
+        ['Si PSA > 2 ng/mL o síntomas', 'Imagen (PSMA-PET/TC o TC + gammagrafía)'],
+      ], notes: ['Testosterona de castración < 50 ng/dL (< 1,7 nmol/L); idealmente < 20 ng/dL. Si no se alcanza, cambiar de fármaco u orquiectomía.', 'Si se sospecha progresión: testosterona y reestadificación.', 'Ofrecer protección ósea si recibe tratamiento combinado. Aconsejar ejercicio.'] },
+      { n: 'Hormonoterapia con metástasis (M1)', rows: [
+        ['Primeros 3 meses con ARPI', 'Revisión mensual'],
+        ['Cada 3–6 meses', 'Historia, PSA, testosterona, hemograma, creatinina, función hepática, fosfatasa alcalina'],
+        ['A intervalos regulares', 'Imagen (TC + gammagrafía ósea), también con PSA estable'],
+        ['Periódicamente', 'Perfil lipídico, HbA1c; densitometría al inicio'],
+      ], notes: ['Un PSA < 2,4 ng/mL con deprivación sola indica respuesta prolongada.', 'Hasta un 25 % progresa sin subir el PSA: no seguir solo con PSA.', 'Si sube el PSA: testosterona (resistencia a la castración si < 50 ng/dL) y reestadificación.', 'Explicar los signos de compresión medular, sobre todo en M1b.'] },
+    ] }],
+    nmibc: [{ label: 'Grupo de riesgo EAU', scen: [
+      { n: 'Bajo riesgo', rows: [
+        ['3 meses', 'Cistoscopia'],
+        ['12 meses', 'Cistoscopia'],
+        ['Años 2–5', 'Cistoscopia anual'],
+        ['Después de 5 años', 'Valorar suspender o usar métodos menos invasivos (p. ej. tira de orina)'],
+      ], notes: ['Citología: no. Imagen: no sistemática.'] },
+      { n: 'Riesgo intermedio (Ta bajo grado)', rows: [
+        ['3 meses', 'Cistoscopia'],
+        ['Hasta los 2 años', 'Cistoscopia cada 6 meses'],
+        ['Años 3–10', 'Cistoscopia anual'],
+        ['Después de 10 años', 'Fin del seguimiento'],
+      ], notes: ['Citología: no. Imagen: no sistemática.', 'El riesgo intermedio de alto grado se sigue como alto riesgo.'] },
+      { n: 'Riesgo alto y muy alto (o intermedio de alto grado)', rows: [
+        ['3 meses', 'Cistoscopia + citología'],
+        ['Hasta los 2 años', 'Cistoscopia + citología cada 3 meses'],
+        ['Años 3–5', 'Cistoscopia + citología cada 6 meses'],
+        ['Después de 5 años', 'Cistoscopia + citología anual, de por vida'],
+        ['Imagen', 'Uro-TC anual hasta los 5 años; después cada 2 años hasta los 10 años'],
+      ], notes: ['Si la citología es positiva sin tumor visible: biopsias de mapeo (o guiadas por fluorescencia) y estudio extravesical (uro-TC, biopsia de uretra prostática).'] },
+    ] }],
+    mibc: [{ label: 'Tratamiento', scen: [
+      { n: 'Tras cistectomía radical', rows: [
+        ['Primeros 90 días', 'Revisión según evolución y tratamiento adyuvante: herida/estoma, dolor, ITU, función renal'],
+        ['Hasta el 3.er año', 'TC tórax-abdomen-pelvis con fase urográfica cada 6 meses'],
+        ['Desde el 4.º año', 'TC anual'],
+        ['En cada revisión', 'Creatinina/FG, sodio y potasio, gasometría venosa (acidosis); exploración del estoma'],
+        ['Anual', 'Vitamina B12 si derivación con intestino'],
+      ], notes: ['Vigilar el tracto urinario superior si hubo tumor multifocal, CIS o margen ureteral positivo (recidiva tardía, > 3 años).', 'Seguir la uretra en varones con riesgo de recidiva uretral (afectación de uretra prostática o próstata); citología o lavado uretral.', 'Duración: individualizar. Con pT3-4 o ganglios positivos, el riesgo dura > 20 años; en > 80 años o pT0 pesa más la mortalidad por otras causas.', 'Neovejiga: continencia y vaciado (en mujeres, muchas necesitan sondaje).'] },
+      { n: 'Tras tratamiento trimodal (vejiga conservada)', rows: [
+        ['Hasta los 2 años', 'Cistoscopia cada 3 meses'],
+        ['Años 3–5', 'Cistoscopia cada 6 meses'],
+        ['Después de 5 años', 'Cistoscopia anual, de por vida'],
+        ['Años 1–3 (hasta 5)', 'Citología + TC o RM de tórax, abdomen y pelvis con tracto urinario superior cada 6–12 meses'],
+        ['Después', 'Imagen según la clínica'],
+      ], notes: ['La recidiva músculo-invasiva requiere valorar pronto la cistectomía de rescate.', 'La cistoscopia y la citología son más difíciles de interpretar tras la radioterapia.', 'Vigilar también la función vesical y la toxicidad tardía.'] },
+    ] }],
+    utuc: [{ label: 'Tratamiento y riesgo', scen: [
+      { n: 'Nefroureterectomía, bajo riesgo', rows: [
+        ['3 meses', 'Cistoscopia'],
+        ['12 meses', 'Cistoscopia'],
+        ['Años 2–5', 'Cistoscopia anual'],
+      ], notes: ['La búsqueda de metástasis no es obligatoria. Imagen del lado contralateral: individualizar.'] },
+      { n: 'Nefroureterectomía, alto riesgo, con antecedente de tumor vesical', rows: [
+        ['3 meses', 'Cistoscopia + citología'],
+        ['Hasta los 2 años', 'Cistoscopia + citología cada 3 meses'],
+        ['Años 3–5', 'Cistoscopia + citología cada 6 meses'],
+        ['Después de 5 años', 'Cistoscopia + citología anual'],
+        ['Imagen', 'Uro-TC + TC de tórax cada 6 meses durante 2 años; después anual'],
+      ], notes: ['La mayoría de las metástasis pulmonares aparecen en los 2 primeros años.'] },
+      { n: 'Nefroureterectomía, alto riesgo, sin antecedente de tumor vesical', rows: [
+        ['3 meses', 'Cistoscopia + citología'],
+        ['Hasta los 2 años', 'Cistoscopia + citología cada 6 meses'],
+        ['Años 3–5', 'Cistoscopia + citología anual'],
+        ['Imagen', 'Uro-TC + TC de tórax cada 6 meses durante 2 años; después anual'],
+      ], notes: ['El riesgo de recidiva baja claramente a partir del 4.º año.'] },
+      { n: 'Tratamiento conservador, bajo riesgo', rows: [
+        ['6–8 semanas', 'Ureteroscopia de revisión (second look)'],
+        ['3 y 6 meses', 'Cistoscopia + uro-TC'],
+        ['Años 1–5', 'Cistoscopia + uro-TC anual (± ureteroscopia)'],
+      ], notes: ['Esquema válido si la ureteroscopia de revisión es negativa y no hubo cambio de grado o estadio.'] },
+      { n: 'Tratamiento conservador, alto riesgo, con antecedente de tumor vesical', rows: [
+        ['3 y 6 meses', 'Uro-TC (o urografía por RM) + ureteroscopia; cistoscopia + citología'],
+        ['Hasta los 2 años', 'Cistoscopia + citología cada 3 meses; uro-TC cada 6 meses'],
+        ['Años 3–5', 'Cistoscopia + citología cada 6 meses; uro-TC anual (± ureteroscopia)'],
+        ['Después de 5 años', 'Cistoscopia + citología anual'],
+      ], notes: ['El tracto superior ipsilateral necesita seguimiento largo: recidiva posible más allá de 5 años.'] },
+      { n: 'Tratamiento conservador, alto riesgo, sin antecedente de tumor vesical', rows: [
+        ['3 y 6 meses', 'Uro-TC (o urografía por RM) + ureteroscopia; cistoscopia + citología'],
+        ['Hasta los 2 años', 'Cistoscopia + citología cada 6 meses; uro-TC cada 6 meses'],
+        ['Años 3–5', 'Cistoscopia + citología anual; uro-TC anual (± ureteroscopia)'],
+      ], notes: ['El tracto superior ipsilateral necesita seguimiento largo: recidiva posible más allá de 5 años.'] },
+    ] }],
+    rinon: [{ label: 'Riesgo de recidiva', scen: [
+      { n: 'Bajo (Leibovich 0–2; no células claras: pT1 N0 y grado 1–2)', rows: [
+        ['6, 18 y 30 meses', 'TC de tórax y abdomen'],
+        ['Después de 3 años', 'TC cada 2 años'],
+        ['Después de 5 años', 'Sin imagen'],
+      ], notes: ['A partir de los 3 años, valorar terminar el seguimiento con imagen según comorbilidad, edad y deseos del paciente.'] },
+      { n: 'Intermedio (Leibovich 3–5; no células claras: pT1b y/o grado 3–4)', rows: [
+        ['6, 12, 24 y 36 meses', 'TC de tórax y abdomen'],
+        ['Años 4–5', 'TC anual'],
+        ['Después de 5 años', 'TC cada 2 años'],
+      ], notes: ['A partir de los 5 años, valorar terminar el seguimiento con imagen según comorbilidad, edad y deseos del paciente.'] },
+      { n: 'Alto (Leibovich ≥ 6; no células claras: pT2–4 o N1)', rows: [
+        ['3, 6, 12, 18, 24 y 36 meses', 'TC de tórax y abdomen'],
+        ['Años 4–5', 'TC anual'],
+        ['Después de 5 años', 'TC cada 2 años'],
+      ], notes: [] },
+    ] }],
+    testiculo: [{ label: 'Grupo', scen: [
+      { n: 'Seminoma estadio I (vigilancia o tras carboplatino/radioterapia)', rows: [
+        ['Año 1', 'Marcadores (AFP, β-hCG, LDH) ± consulta 2 veces; TC o RM abdominopélvica 2 veces'],
+        ['Año 2', 'Marcadores 2 veces; TC/RM 2 veces'],
+        ['Año 3', 'Marcadores 2 veces; TC/RM una vez (36 meses)'],
+        ['Años 4–5', 'Marcadores una vez; TC/RM una vez (60 meses)'],
+        ['Después de 5 años', 'Sin pruebas de rutina: alta con informe de supervivencia (ver nota)'],
+      ], notes: ['Radiografía de tórax: no.'] },
+      { n: 'No seminoma estadio I en vigilancia', rows: [
+        ['Año 1', 'Marcadores ± consulta 4 veces (6 si invasión linfovascular); Rx tórax 2 veces; TC/RM 2 veces'],
+        ['Año 2', 'Marcadores 4 veces; Rx tórax 2 veces; TC/RM a los 24 meses (y a los 18 si invasión linfovascular)'],
+        ['Año 3', 'Marcadores 2 veces; Rx tórax una vez si invasión linfovascular; TC/RM a los 36 meses'],
+        ['Años 4–5', 'Marcadores 1–2 veces; Rx tórax a los 60 meses si invasión linfovascular; TC/RM a los 60 meses'],
+        ['Después de 5 años', 'Sin pruebas de rutina: alta con informe de supervivencia (ver nota)'],
+      ], notes: ['Las TC/RM de 36 y 60 meses las recomienda la mitad del panel de consenso.'] },
+      { n: 'Tras tratamiento adyuvante o remisión completa (pronóstico bueno o intermedio)', rows: [
+        ['Año 1', 'Marcadores ± consulta 4 veces; Rx tórax 1–2 veces; TC/RM 1–2 veces'],
+        ['Año 2', 'Marcadores 4 veces; Rx tórax una vez; TC/RM a los 24 meses'],
+        ['Año 3', 'Marcadores 2 veces; Rx tórax una vez; TC/RM a los 36 meses'],
+        ['Años 4–5', 'Marcadores 2 veces; Rx tórax una vez; TC/RM a los 60 meses'],
+        ['Después de 5 años', 'Sin pruebas de rutina: alta con informe de supervivencia (ver nota)'],
+      ], notes: ['TC de tórax en lugar de radiografía si hubo metástasis pulmonares al diagnóstico.', 'Si había teratoma en la masa residual resecada, el seguimiento debe seguir a cargo del uro-oncólogo.', 'Sin remisión completa o con mal pronóstico: seguimiento individual en un centro especializado.'] },
+    ] }],
+    pene: [
+      { label: 'Tumor primario', scen: [
+        { n: 'Tratamiento conservador del pene', rows: [
+          ['Años 1–2', 'Exploración cada 3 meses'],
+          ['Años 3–5', 'Exploración cada 6 meses'],
+        ], notes: ['Biopsia de control tras tratamiento tópico o láser de PeIN (opcional).'] },
+        { n: 'Penectomía parcial o total', rows: [
+          ['Años 1–2', 'Exploración cada 3 meses'],
+          ['Años 3–5', 'Exploración anual'],
+        ], notes: [] },
+      ] },
+      { label: 'Ganglios inguinales', scen: [
+        { n: 'Vigilancia (sin estadificación invasiva)', rows: [
+          ['Año 1', 'Exploración inguinal cada 3 meses; valorar ecografía ± PAAF cada 3 meses'],
+          ['Año 2', 'Exploración cada 6 meses'],
+          ['Años 3–5', 'Exploración cada 6 meses'],
+        ], notes: [] },
+        { n: 'pN0 (ganglio centinela o linfadenectomía negativos)', rows: [
+          ['Año 1', 'Exploración cada 3 meses; valorar ecografía ± PAAF cada 3 meses'],
+          ['Año 2', 'Exploración cada 6 meses; valorar ecografía cada 6 meses'],
+          ['Después', 'Sin seguimiento ganglionar específico'],
+        ], notes: [] },
+        { n: 'pN+ (tras linfadenectomía)', rows: [
+          ['Años 1–2', 'Exploración + TC tórax-abdomen-pelvis (o PET-TC con 18F-FDG) cada 3 meses'],
+          ['Años 3–5', 'Exploración + TC cada 6 meses'],
+        ], notes: [] },
+      ] },
+    ],
+    uretra: [{ label: 'Situación', scen: [
+      { n: 'Carcinoma uretral primario', rows: [
+        ['Sin esquema establecido', 'Individualizar según los factores de riesgo del paciente'],
+        ['Cirugía conservadora de la uretra', 'Seguimiento más intenso: citología urinaria, uretrocistoscopia e imagen transversal'],
+      ], notes: ['Tumor poco frecuente: no hay estudios que definan intervalos.'] },
+    ] }],
+  };
+  const FU_NOTES = {
+    prostata: '',
+    nmibc: 'La primera cistoscopia siempre a los 3 meses de la RTU. El grupo de riesgo se calcula en la pestaña Vejiga.',
+    mibc: '',
+    utuc: 'Bajo riesgo: unifocal, < 2 cm, citología sin alto grado, biopsia de bajo grado y sin invasión en el TC (todos). Alto riesgo: cualquier criterio fuerte (citología o biopsia de alto grado, invasión en el TC, subtipo histológico).',
+    rinon: 'TC de tórax y abdomen (o RM de abdomen). El seguimiento funcional (función renal y riesgo cardiovascular) sigue según necesidad, aunque acabe el oncológico.',
+    testiculo: 'TC o RM abdominopélvica (RM en centros con experiencia, sin radiación). Sin ecografía rutinaria del testículo contralateral ni PET en vigilancia.',
+    pene: 'Seguimiento mínimo de 5 años. Desde el 2.º año puede pasarse a autoexploración en pacientes capaces, con acceso fácil a la consulta.',
+    uretra: '',
+  };
+  const FU_EXTRA = {
+    rinon: ['Intensificar el seguimiento tras nefrectomía parcial con margen positivo.', 'Derivar a Nefrología si hay ERC previa, FG < 45 mL/min tras el tratamiento o comorbilidad renal.', 'Ofrecer valoración psicológica.'],
+    testiculo: ['Informe de supervivencia: al terminar el seguimiento, documento escrito para el paciente y su médico de familia con los efectos tardíos a vigilar (hipertensión, dislipemia, déficit de testosterona, audición y neuropatía tras cisplatino, segundas neoplasias), hábitos de vida, el riesgo de recidiva tardía (≈ 0,5 %) y los síntomas por los que debe consultar.', 'Durante el seguimiento: vigilar y tratar hipertensión, dislipemia y déficit de testosterona; promover hábitos saludables y dejar de fumar.'],
+    pene: ['Tras 5 años puede suspenderse si el paciente se autoexplora de forma fiable.', 'Variantes agresivas (sarcomatoide): TC aunque sea N0, en centro especializado.'],
+  };
+  const fuRows = (rows, head = ['Cuándo', 'Qué pedir']) => `<table class="fu-t"><thead><tr><th>${head[0]}</th><th>${head[1]}</th></tr></thead><tbody>${rows.map(([w, t]) => `<tr><th scope="row">${w}</th><td>${t}</td></tr>`).join('')}</tbody></table>`;
+  function buildFu() {
+    Object.keys(FU).forEach(k => {
+      const box = $('#fu-' + k);
+      box.innerHTML = FU[k].map((g, gi) => `<div class="fu-g">${FU[k].length > 1 || g.scen.length > 1 ? `<label class="field"><span>${g.label}</span><select id="fu-${k}-${gi}">${g.scen.map((s, si) => `<option value="${si}">${s.n}</option>`).join('')}</select></label>` : ''}<div id="fu-${k}-${gi}-out"></div></div>`).join('') +
+        (FU_NOTES[k] ? `<p class="detail">${FU_NOTES[k]}</p>` : '');
+      box.addEventListener('change', () => updFu(k));
+      updFu(k);
+    });
+  }
+  function updFu(k) {
+    const title = $('#c-fu-' + k + ' h2').textContent;
+    const parts = FU[k].map((g, gi) => {
+      const sel = $(`#fu-${k}-${gi}`), s = g.scen[sel ? +sel.value : 0];
+      const notes = s.notes.concat(gi === FU[k].length - 1 ? (FU_EXTRA[k] || []) : []);
+      $(`#fu-${k}-${gi}-out`).innerHTML = fuRows(s.rows) + (notes.length ? `<ul class="fu-n">${notes.map(n => `<li>${n}</li>`).join('')}</ul>` : '') + (s.box ? s.box() : '');
+      return `${FU[k].length > 1 ? g.label + ' — ' : ''}${s.n}:\n${s.rows.map(([w, t]) => `• ${w}: ${t}`).join('\n')}`;
+    });
+    copyText['fu-' + k] = `Seguimiento (EAU 2026) — ${title}\n${parts.join('\n')}`;
+  }
+
+  /* ---------- Imprimir cuestionarios para el paciente ---------- */
+  const PRINTABLE = ['c-ipss', 'c-oabq', 'c-iciq', 'c-bpic', 'c-shim', 'c-ehs', 'c-iief', 'c-pot'];
+  function printSheet(card) {
+    const title = card.querySelector('h2').textContent;
+    let body = '';
+    [...card.querySelector('.inputs').children].forEach(el => {
+      if (el.matches('p.hint')) { if (!/puntuaci/i.test(el.textContent)) body += `<p class="ps-intro">${esc(el.textContent)}</p>`; }
+      else if (el.matches('.sub-h')) body += `<p class="ps-sub">${el.innerHTML}</p>`;
+      else if (el.matches('fieldset.q')) {
+        const q = el.querySelector('p:not(.hint)');
+        const seg = [...el.querySelectorAll('.seg label')];
+        let opts;
+        if (seg.length > 7) {
+          const val = l => l.querySelector('input').value;
+          const lo = seg[0].title, hi = seg[seg.length - 1].title;
+          opts = `<div class="ps-scale">${lo && lo !== val(seg[0]) ? `<i>${esc(lo)}</i>` : ''}${seg.map(l => `<b>${esc(val(l))}</b>`).join('')}${hi && hi !== val(seg[seg.length - 1]) ? `<i>${esc(hi)}</i>` : ''}</div>`;
+        } else if (seg.length) {
+          opts = `<div class="ps-o">${seg.map(l => `<span>${esc(l.title || l.querySelector('input').value)}</span>`).join('')}</div>`;
+        } else {
+          opts = `<div class="ps-o">${[...el.querySelectorAll('.check span')].map(x => `<span>${esc(x.textContent)}</span>`).join('')}</div>`;
+        }
+        body += `<div class="ps-q"><p>${q ? q.innerHTML : ''}</p>${opts}</div>`;
+      }
+    });
+    const sheet = $('#print-sheet');
+    sheet.innerHTML = `<div class="ps-h"><h1>${esc(title)}</h1><span>UroConsulta</span></div><div class="ps-id"><span>Nombre:</span><span>Fecha:</span></div>${body}<p class="ps-f">Marque una sola respuesta en cada pregunta, salvo que se indique otra cosa. Entregue la hoja en la consulta.</p>`;
+    document.body.classList.add('printing');
+    const done = () => { document.body.classList.remove('printing'); sheet.innerHTML = ''; };
+    window.addEventListener('afterprint', done, { once: true });
+    window.print();
+  }
+  PRINTABLE.forEach(id => {
+    const card = $('#' + id), copyBtn = card && card.querySelector('.card-h .copy');
+    if (!copyBtn) return;
+    const wrap = document.createElement('div');
+    wrap.className = 'card-btns';
+    copyBtn.replaceWith(wrap);
+    const b = document.createElement('button');
+    b.className = 'btn'; b.type = 'button'; b.textContent = 'Imprimir';
+    b.title = 'Imprime el cuestionario en blanco para que lo rellene el paciente';
+    b.addEventListener('click', () => printSheet(card));
+    wrap.append(b, copyBtn);
+  });
+
+  /* ---------- Leibovich ---------- */
+  const lbVal = id => +$('#' + id).value;
+  function updLeib() {
+    const r = UC.leibovich({ t: lbVal('lb-t'), n: lbVal('lb-n'), size: lbVal('lb-s'), grade: lbVal('lb-g'), necrosis: lbVal('lb-nec') });
+    const fu = FU.rinon[0].scen[r.group];
+    $('#lb-out').innerHTML = metric('Puntuación', r.score, '/ 11') + chip(r.sev, r.label) +
+      `<p class="detail">Seguimiento EAU: ${fu.rows.map(([w, x]) => `<b>${w}:</b> ${x}`).join('; ')}.</p>`;
+    const txt = id => $('#' + id).selectedOptions[0].textContent;
+    copyText.leib = `Leibovich ${r.score} puntos (${txt('lb-t')}, ${txt('lb-n')}, ${txt('lb-s')}, grado ${txt('lb-g')}, necrosis ${txt('lb-nec').toLowerCase()}): ${r.label.toLowerCase()} de metástasis.`;
+  }
+  function goLeibFu() {
+    const r = UC.leibovich({ t: lbVal('lb-t'), n: lbVal('lb-n'), size: lbVal('lb-s'), grade: lbVal('lb-g'), necrosis: lbVal('lb-nec') });
+    $('#fu-rinon-0').value = String(r.group); updFu('rinon');
+    $('#tab-seguimiento').click();
+    $('#c-fu-rinon').scrollIntoView({ block: 'start' });
+  }
+
   /* ---------- BPIC-SS ---------- */
   const BPIC_F = ['Nunca', 'Casi nunca', 'A veces', 'Casi siempre', 'Siempre'].map((l, i) => [i, l]);
   const BPIC_M = ['Nada', 'Poco', 'Algo', 'Moderadamente', 'Mucho'].map((l, i) => [i, l]);
@@ -3798,8 +4233,9 @@ const CTCAE_TAGS = [['A', 'ARTA y ADT'], ['I', 'Inmunoterapia'], ['Q', 'Quimiote
   /* ---------- Pestañas y búsqueda ---------- */
   const norm = s => s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
   const ORDER = ['c-riesgo', 'c-psadt', 'c-brig', 'c-vol', 'c-rpcrc', 'c-roach', 'c-capra', 'c-capras', 'c-bcr', 'c-lk-prostata', 'c-ctcae', 'c-inter',
-    'c-lk-vejiga', 'c-nmibc', 'c-eortc', 'c-renalns', 'c-padua', 'c-imdc',
+    'c-lk-vejiga', 'c-nmibc', 'c-eortc', 'c-renalns', 'c-padua', 'c-leib', 'c-imdc',
     'c-ipss', 'c-oabq', 'c-iciq', 'c-bpic', 'c-uds', 'c-noct', 'c-shim', 'c-ehs', 'c-iief', 'c-ft', 'c-popq', 'c-pot', 'c-lk-suelo',
+    'c-fu-prostata', 'c-fu-nmibc', 'c-fu-mibc', 'c-fu-utuc', 'c-fu-rinon', 'c-fu-testiculo', 'c-fu-pene', 'c-fu-uretra',
     'c-ps', 'c-g8', 'c-cci', 'c-renal', 'c-sc', 'c-conv'];
   ORDER.forEach(id => { const el = $('#' + id); if (el) $('#main').insertBefore(el, $('#empty')); });
   let tab = 'prostata';
@@ -3839,7 +4275,8 @@ const CTCAE_TAGS = [['A', 'ARTA y ADT'], ['I', 'Inmunoterapia'], ['Q', 'Quimiote
   }));
 
   /* ---------- Arranque ---------- */
-  buildIpss(); buildG8(); buildConv(); buildLinks(); buildPopq(); buildShim(); buildEhs(); buildBpic(); buildCci(); buildImdc(); buildIciq(); buildIief(); buildOabq(); buildPot(); buildPs(); buildCtcae(); buildIa();
+  buildIpss(); buildG8(); buildConv(); buildLinks(); buildPopq(); buildShim(); buildEhs(); buildBpic(); buildFu();
+  $('#lb-go').addEventListener('click', goLeibFu); buildCci(); buildImdc(); buildIciq(); buildIief(); buildOabq(); buildPot(); buildPs(); buildCtcae(); buildIa();
   $('#ct-tx').value = 'Enzalutamida';
   $('#ct-tags').addEventListener('click', e => { const b = e.target.closest('.pill'); if (!b) return; ct.tag = b.dataset.tag; $$('#ct-tags .pill').forEach(p => p.setAttribute('aria-pressed', String(p === b))); listCtcae(); });
   $('#ct-q').addEventListener('input', listCtcae);
@@ -3878,8 +4315,8 @@ const CTCAE_TAGS = [['A', 'ARTA y ADT'], ['I', 'Inmunoterapia'], ['Q', 'Quimiote
   $('#ipq-4').checked = true;
   [2, 3, 2, 2, 3, 0, 1, 1].forEach((x, i) => { $('#g8-' + i).value = String(x); });
 
-  const all = () => { updRpcrc(); updRiesgo(); updVol(); updPsaDT(); updRenal(); updSc(); updIpss(); updG8(); updConv(); updUds(); updNoct(); updPopq(); updShim(); updEhs(); updBpic(); updCci(); updRoach(); updCapra(); updCapraS(); updBcr(); updImdc(); updFt(); updIciq(); updRenalNs(); updPadua(); updNmibc(); updEortc(); updIief(); updOabq(); updPot(); updBrig(); updPs(); };
-  [['c-rpcrc', updRpcrc], ['c-roach', updRoach], ['c-capra', updCapra], ['c-capras', updCapraS], ['c-bcr', updBcr], ['c-imdc', updImdc], ['c-ft', updFt], ['c-iciq', updIciq], ['c-renalns', updRenalNs], ['c-padua', updPadua], ['c-nmibc', updNmibc], ['c-eortc', updEortc], ['c-iief', updIief], ['c-oabq', updOabq], ['c-pot', updPot], ['c-brig', updBrig]].forEach(([id, fn]) => { $('#' + id).addEventListener('input', fn); $('#' + id).addEventListener('change', fn); });
+  const all = () => { updLeib(); updRpcrc(); updRiesgo(); updVol(); updPsaDT(); updRenal(); updSc(); updIpss(); updG8(); updConv(); updUds(); updNoct(); updPopq(); updShim(); updEhs(); updBpic(); updCci(); updRoach(); updCapra(); updCapraS(); updBcr(); updImdc(); updFt(); updIciq(); updRenalNs(); updPadua(); updNmibc(); updEortc(); updIief(); updOabq(); updPot(); updBrig(); updPs(); };
+  [['c-leib', updLeib], ['c-rpcrc', updRpcrc], ['c-roach', updRoach], ['c-capra', updCapra], ['c-capras', updCapraS], ['c-bcr', updBcr], ['c-imdc', updImdc], ['c-ft', updFt], ['c-iciq', updIciq], ['c-renalns', updRenalNs], ['c-padua', updPadua], ['c-nmibc', updNmibc], ['c-eortc', updEortc], ['c-iief', updIief], ['c-oabq', updOabq], ['c-pot', updPot], ['c-brig', updBrig]].forEach(([id, fn]) => { $('#' + id).addEventListener('input', fn); $('#' + id).addEventListener('change', fn); });
   $('#c-uds').addEventListener('input', updUds);
   $('#c-noct').addEventListener('input', updNoct);
   $('#c-popq').addEventListener('input', updPopq); $('#c-popq').addEventListener('change', updPopq);
@@ -3914,11 +4351,16 @@ const CTCAE_TAGS = [['A', 'ARTA y ADT'], ['I', 'Inmunoterapia'], ['Q', 'Quimiote
     lastCaAuto = null;
     $('#notice').hidden = true;
     all();
+    const b = $('#clear-all');
+    b.textContent = 'Datos borrados ✓';
+    clearTimeout(b._t); b._t = setTimeout(() => { b.textContent = 'Vaciar datos'; }, 1800);
+    window.scrollTo({ top: 0 });
   });
 
   all(); render();
 })();
 </script>
+<div id="print-sheet" aria-hidden="true"></div>
 <script>
 // App instalable: funciona sin conexión cuando se abre desde la web (https), no al abrir el archivo suelto.
 if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) {
