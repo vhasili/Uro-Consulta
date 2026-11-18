@@ -542,7 +542,7 @@ footer.page strong { color: var(--ink); }
         </div>
         <div class="result" aria-live="polite" id="rp-out"></div>
       </div>
-      <div class="ref">Calculadoras 3 y 4 de Rotterdam con volumen por tacto (Roobol et al., Eur Urol 2012; fórmulas publicadas en Roobol et al., World J Urol 2012;30:149-55). Volumen en clases: &lt; 30 mL → 25; 30–49 → 40; ≥ 50 → 60. Calculadora 3: logit = −1,826 + 1,024 × (log₂PSA − 2) − 1,50 × (log₂vol − 5,4) + 0,992 × tacto. Calculadora 4: logit = −1,470 − 0,677 × biopsia previa + (0,576 − 0,423 × biopsia previa) × (log₂PSA − 2) − 1,043 × (log₂vol − 5,5) + 0,68 × tacto. Da la probabilidad de cualquier cáncer en biopsia sextante, en varones de 55 a 74 años con PSA ≥ 3 del ERSPC Rotterdam: con biopsias de 10–12 cilindros o en población clínica tiende a infraestimar. La versión actual de la web oficial (que separa el cáncer clínicamente significativo y admite RM) usa coeficientes no publicados; para esa, el enlace de la ficha de enlaces oficiales.</div>
+      <div class="ref">Calculadoras 3 y 4 de Rotterdam con volumen por tacto (Roobol et al., Eur Urol 2012; fórmulas publicadas en Roobol et al., World J Urol 2012;30:149-55). Volumen en clases: &lt; 30 mL → 25; 30–49 → 40; ≥ 50 → 60. Calculadora 3: logit = −1,826 + 1,024 × (log₂PSA − 2) − 1,50 × (log₂vol − 5,4) + 0,992 × tacto. Calculadora 4: logit = −1,470 − 0,677 × biopsia previa + (0,576 − 0,423 × biopsia previa) × (log₂PSA − 2) − 1,043 × (log₂vol − 5,5) + 0,68 × tacto. Alto riesgo (Gleason ≥ 7 y/o &gt; T2b): coeficientes obtenidos de las odds ratio y constantes de la tabla 2 de Roobol, Eur Urol 2012;61:577-83 (constante publicada con dos decimales, 0,03: el resultado puede diferir algún punto del de la web). Desarrollada en varones de 55 a 74 años con PSA ≥ 3 del ERSPC Rotterdam y biopsia sextante: con biopsias de 10–12 cilindros o en población clínica tiende a infraestimar. La versión actual de la web oficial (ISUP 2014, cribiforme y RM) usa otros coeficientes; para esa, el enlace de la ficha de enlaces oficiales.</div>
     </article>
 
     <article class="card" id="c-roach" data-tab="prostata" data-keys="roach ganglios afectacion ganglionar extension extracapsular vesiculas seminales radioterapia pelvis formula">
@@ -1344,6 +1344,29 @@ footer.page strong { color: var(--ink); }
     </article>
 
     <!-- ============ ENLACES (uno por área) ============ -->
+    <article class="card" id="c-bcgu" data-tab="vejiga" data-keys="bcg no respondedor bcg-unresponsive fallo bcg nmibc alto grado t1 cis re-rtu progresion slusarczyk riesgo">
+      <div class="card-h">
+        <div><span class="kind">Pronóstico</span><h2>Riesgo de no respuesta a BCG en NMIBC de alto grado</h2></div>
+        <button class="btn copy" type="button" data-copy="bcgu">Copiar</button>
+      </div>
+      <div class="card-b">
+        <div class="inputs">
+          <div class="row">
+            <label class="field"><span>Estadio</span><select id="bu-t"><option value="0">Ta alto grado</option><option value="5" selected>T1 alto grado</option></select></label>
+            <label class="field"><span>Grado OMS 1973</span><select id="bu-g"><option value="0">G2</option><option value="2">Desconocido</option><option value="5" selected>G3</option></select></label>
+            <label class="field"><span>Número de tumores</span><select id="bu-n"><option value="0" selected>Único</option><option value="4">Múltiples</option></select></label>
+          </div>
+          <div class="row">
+            <label class="field"><span>CIS concomitante</span><select id="bu-cis"><option value="0" selected>No</option><option value="4">Sí</option></select></label>
+            <label class="field"><span>Re-RTU</span><select id="bu-re"><option value="0" selected>T0 (sin tumor)</option><option value="0" data-l="residual Ta bajo grado">Residual Ta bajo grado</option><option value="10">Residual T1 o alto grado</option><option value="4">No realizada</option></select></label>
+          </div>
+          <p class="hint">Para tumores Ta/T1 de alto grado que van a recibir BCG adecuada (al menos 5 de 6 instilaciones de inducción y mantenimiento).</p>
+        </div>
+        <div class="result" aria-live="polite" id="bu-out"></div>
+      </div>
+      <div class="ref">Ślusarczyk A et al., Eur Urol Oncol 2026;9:946-57 (2211 pacientes, 13 centros; validación interna, índice C 0,68, mejor que EORTC y EAU 2021). Evento: enfermedad no respondedora a BCG (criterios IBCG/EAU) o progresión a músculo-invasivo o metastásico. Puntos: T1 5; alto grado G3 5, grado 1973 desconocido 2, G2 0; múltiple 4; CIS 4; re-RTU con residual T1 o alto grado 10, no realizada 4. Grupos: bajo 0–8, intermedio 9–14, alto 15–22, muy alto 23–28; libres de evento a 5 años 88 %, 79 %, 60 % y 49 %. Pendiente de validación externa. Calculadora de los autores: kalkulatory.wum.edu.pl.</div>
+    </article>
+
     <article class="card" id="c-lk-vejiga" data-tab="vejiga" data-keys="enlaces oficiales progrxn progrxn-bca inteligencia artificial progresion vejiga nmibc eau app kwong">
       <div class="card-h">
         <div><span class="kind">Externas · requieren conexión</span><h2>ProGRxN-BCa: progresión del tumor vesical no músculo-invasivo</h2></div>
@@ -1615,6 +1638,13 @@ UC.leibovich = function ({ t, n, size, grade, necrosis }) {
   return { score, group: g[0], label: g[1], sev: g[2] };
 };
 
+// No respuesta a BCG o progresión en NMIBC de alto grado (Ślusarczyk, Eur Urol Oncol 2026). Supervivencia libre de evento a 5 años por grupo.
+UC.bcgu = function (pts) {
+  if (!(pts >= 0 && pts <= 28)) return null;
+  const g = pts <= 8 ? ['Riesgo bajo', 'ok', 88] : pts <= 14 ? ['Riesgo intermedio', 'warn', 79] : pts <= 22 ? ['Riesgo alto', 'risk', 60] : ['Riesgo muy alto', 'risk', 49];
+  return { pts, label: g[0], sev: g[1], free5: g[2] };
+};
+
 // Erection Hardness Score (Mulhall 2007), 1–4.
 UC.ehs = function (g) {
   if (!(Number.isInteger(g) && g >= 1 && g <= 4)) return null;
@@ -1687,7 +1717,16 @@ UC.rpcrc = function ({ psa, dre, vol, prior }) {
     : -1.470 - 0.677 * pb + (0.576 - 0.423 * pb) * lp2 - 1.043 * (Math.log2(cls) - 5.5) + 0.68 * dre;
   else lp = prior === 0 ? -1.743 + 0.788 * lp2 + 1.105 * dre
     : -1.315 - 0.899 * pb + (0.421 - 0.362 * pb) * lp2 + 0.726 * dre;
-  return { p: 1 / (1 + Math.exp(-lp)), cls, model: cls ? (prior === 0 ? 3 : 4) : null };
+  // Alto grado (Gleason ≥ 7 y/o > T2b): logaritmo de las OR y constantes de la tabla 2 de Roobol, Eur Urol 2012.
+  let pHG = null;
+  if (cls) {
+    const lv = Math.log2(cls);
+    const lh = prior === 0
+      ? Math.log(0.03) + Math.log(3.24) * lp2 + Math.log(6.13) * dre + Math.log(0.22) * (lv - 5.4)
+      : Math.log(0.03) + Math.log(2.93) * lp2 + Math.log(3.71) * dre + Math.log(0.22) * (lv - 5.5) + Math.log(0.32) * pb + Math.log(0.65) * pb * lp2;
+    pHG = 1 / (1 + Math.exp(-lh));
+  }
+  return { p: 1 / (1 + Math.exp(-lp)), pHG, cls, model: cls ? (prior === 0 ? 3 : 4) : null };
 };
 
 UC.roach = function (psa, gs) {
@@ -3460,9 +3499,11 @@ const CTCAE_TAGS = [['A', 'ARTA y ADT'], ['I', 'Inmunoterapia'], ['Q', 'Quimiote
     const pc = r.p * 100, d = pc < 10 ? 1 : 0;
     const ctx = ['sin PSA ni biopsia previos', 'PSA previo sin biopsia', 'biopsia previa negativa'][prior];
     const how = r.cls ? `Calculadora ${r.model}, volumen ${fmt(vol, 0)} mL → clase ${r.cls}.` : 'Sin volumen: modelo de PSA y tacto (menos preciso).';
-    out.innerHTML = metric('Cáncer en la biopsia', fmt(pc, d), '%') +
-      `<p class="detail">${how} ${psa < 3 ? 'PSA &lt; 3: fuera del rango en que se desarrolló. ' : ''}Cualquier cáncer en biopsia sextante; no distingue el clínicamente significativo.</p>`;
-    copyText.rpcrc = `Rotterdam/ERSPC ${r.cls ? 'calculadora ' + r.model : 'PSA + tacto'} (PSA ${fmt(psa, 1)} ng/mL, tacto ${dre ? 'sospechoso' : 'normal'}${r.cls ? ', volumen ' + fmt(vol, 0) + ' mL' : ''}, ${ctx}): riesgo de cáncer en biopsia ${fmt(pc, d)} %.`;
+    const ph = r.pHG === null ? null : r.pHG * 100, dh = ph !== null && ph < 10 ? 1 : 0;
+    out.innerHTML = metric('Cáncer en la biopsia (cualquiera)', fmt(pc, d), '%') +
+      (ph === null ? '' : metric('Cáncer de alto riesgo', fmt(ph, dh), '%', 'sm')) +
+      `<p class="detail">${how} ${psa < 3 ? 'PSA &lt; 3: fuera del rango en que se desarrolló. ' : ''}${ph === null ? 'El riesgo de alto grado necesita el volumen. ' : 'Alto riesgo: Gleason ≥ 7 y/o estadio &gt; T2b. '}Biopsia sextante.</p>`;
+    copyText.rpcrc = `Rotterdam/ERSPC ${r.cls ? 'calculadora ' + r.model : 'PSA + tacto'} (PSA ${fmt(psa, 1)} ng/mL, tacto ${dre ? 'sospechoso' : 'normal'}${r.cls ? ', volumen ' + fmt(vol, 0) + ' mL' : ''}, ${ctx}): riesgo de cáncer en biopsia ${fmt(pc, d)} %${ph === null ? '' : `, de cáncer de alto riesgo (Gleason ≥ 7 y/o > T2b) ${fmt(ph, dh)} %`}.`;
   }
 
   function updRoach() {
@@ -3930,6 +3971,17 @@ const CTCAE_TAGS = [['A', 'ARTA y ADT'], ['I', 'Inmunoterapia'], ['Q', 'Quimiote
     wrap.append(b, copyBtn);
   });
 
+  /* ---------- No respuesta a BCG ---------- */
+  function updBcgu() {
+    const ids = ['bu-t', 'bu-g', 'bu-n', 'bu-cis', 'bu-re'];
+    const r = UC.bcgu(ids.reduce((a, id) => a + +$('#' + id).value, 0));
+    $('#bu-out').innerHTML = metric('Puntuación', r.pts, '/ 28') + chip(r.sev, r.label) +
+      metric('Libre de no respuesta a BCG o progresión a 5 años', r.free5, '%', 'sm') +
+      `<p class="detail">Riesgo de evento a 5 años ≈ ${100 - r.free5} %.</p>`;
+    const txt = id => $('#' + id).selectedOptions[0].textContent;
+    copyText.bcgu = `Riesgo de no respuesta a BCG (Ślusarczyk 2026): ${r.pts}/28 puntos (${txt('bu-t')}, grado ${txt('bu-g')}, tumor ${txt('bu-n').toLowerCase()}, CIS ${txt('bu-cis').toLowerCase()}, re-RTU ${txt('bu-re')}): ${r.label.toLowerCase()}; libre de no respuesta a BCG o progresión a 5 años ${r.free5} %.`;
+  }
+
   /* ---------- Leibovich ---------- */
   const lbVal = id => +$('#' + id).value;
   function updLeib() {
@@ -4233,7 +4285,7 @@ const CTCAE_TAGS = [['A', 'ARTA y ADT'], ['I', 'Inmunoterapia'], ['Q', 'Quimiote
   /* ---------- Pestañas y búsqueda ---------- */
   const norm = s => s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
   const ORDER = ['c-riesgo', 'c-psadt', 'c-brig', 'c-vol', 'c-rpcrc', 'c-roach', 'c-capra', 'c-capras', 'c-bcr', 'c-lk-prostata', 'c-ctcae', 'c-inter',
-    'c-lk-vejiga', 'c-nmibc', 'c-eortc', 'c-renalns', 'c-padua', 'c-leib', 'c-imdc',
+    'c-lk-vejiga', 'c-nmibc', 'c-eortc', 'c-bcgu', 'c-renalns', 'c-padua', 'c-leib', 'c-imdc',
     'c-ipss', 'c-oabq', 'c-iciq', 'c-bpic', 'c-uds', 'c-noct', 'c-shim', 'c-ehs', 'c-iief', 'c-ft', 'c-popq', 'c-pot', 'c-lk-suelo',
     'c-fu-prostata', 'c-fu-nmibc', 'c-fu-mibc', 'c-fu-utuc', 'c-fu-rinon', 'c-fu-testiculo', 'c-fu-pene', 'c-fu-uretra',
     'c-ps', 'c-g8', 'c-cci', 'c-renal', 'c-sc', 'c-conv'];
@@ -4315,8 +4367,8 @@ const CTCAE_TAGS = [['A', 'ARTA y ADT'], ['I', 'Inmunoterapia'], ['Q', 'Quimiote
   $('#ipq-4').checked = true;
   [2, 3, 2, 2, 3, 0, 1, 1].forEach((x, i) => { $('#g8-' + i).value = String(x); });
 
-  const all = () => { updLeib(); updRpcrc(); updRiesgo(); updVol(); updPsaDT(); updRenal(); updSc(); updIpss(); updG8(); updConv(); updUds(); updNoct(); updPopq(); updShim(); updEhs(); updBpic(); updCci(); updRoach(); updCapra(); updCapraS(); updBcr(); updImdc(); updFt(); updIciq(); updRenalNs(); updPadua(); updNmibc(); updEortc(); updIief(); updOabq(); updPot(); updBrig(); updPs(); };
-  [['c-leib', updLeib], ['c-rpcrc', updRpcrc], ['c-roach', updRoach], ['c-capra', updCapra], ['c-capras', updCapraS], ['c-bcr', updBcr], ['c-imdc', updImdc], ['c-ft', updFt], ['c-iciq', updIciq], ['c-renalns', updRenalNs], ['c-padua', updPadua], ['c-nmibc', updNmibc], ['c-eortc', updEortc], ['c-iief', updIief], ['c-oabq', updOabq], ['c-pot', updPot], ['c-brig', updBrig]].forEach(([id, fn]) => { $('#' + id).addEventListener('input', fn); $('#' + id).addEventListener('change', fn); });
+  const all = () => { updBcgu(); updLeib(); updRpcrc(); updRiesgo(); updVol(); updPsaDT(); updRenal(); updSc(); updIpss(); updG8(); updConv(); updUds(); updNoct(); updPopq(); updShim(); updEhs(); updBpic(); updCci(); updRoach(); updCapra(); updCapraS(); updBcr(); updImdc(); updFt(); updIciq(); updRenalNs(); updPadua(); updNmibc(); updEortc(); updIief(); updOabq(); updPot(); updBrig(); updPs(); };
+  [['c-bcgu', updBcgu], ['c-leib', updLeib], ['c-rpcrc', updRpcrc], ['c-roach', updRoach], ['c-capra', updCapra], ['c-capras', updCapraS], ['c-bcr', updBcr], ['c-imdc', updImdc], ['c-ft', updFt], ['c-iciq', updIciq], ['c-renalns', updRenalNs], ['c-padua', updPadua], ['c-nmibc', updNmibc], ['c-eortc', updEortc], ['c-iief', updIief], ['c-oabq', updOabq], ['c-pot', updPot], ['c-brig', updBrig]].forEach(([id, fn]) => { $('#' + id).addEventListener('input', fn); $('#' + id).addEventListener('change', fn); });
   $('#c-uds').addEventListener('input', updUds);
   $('#c-noct').addEventListener('input', updNoct);
   $('#c-popq').addEventListener('input', updPopq); $('#c-popq').addEventListener('change', updPopq);
