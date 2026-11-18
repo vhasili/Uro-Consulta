@@ -574,7 +574,7 @@ footer.page strong { color: var(--ink); }
         </div>
         <div class="result" aria-live="polite" id="cs-out"></div>
       </div>
-      <div class="ref">Cooperberg et al., Cancer 2011. PSA &gt; 6–10: 1; &gt; 10–20: 2; &gt; 20: 3. Gleason 3+4: 1; 4+3: 2; 8–10: 3. Total 0–12: bajo 0–2, intermedio 3–5, alto ≥ 6.</div>
+      <div class="ref">Cooperberg et al., Cancer 2011. PSA &gt; 6–10: 1; &gt; 10–20: 2; &gt; 20: 3. Gleason 3+4: 1; 4+3: 2; 8–10: 3. Total 0–12: bajo 0–2, intermedio 3–5, alto ≥ 6. Porcentajes de recidiva a 3 y 5 años por puntuación de la tabla 2 (3837 pacientes de CaPSURE, sobre todo de práctica comunitaria; recidiva global a 5 años 22 %). Las cifras absolutas varían según la serie; con puntuaciones altas había pocos pacientes.</div>
     </article>
 
     <!-- ============ RECIDIVA BIOQUÍMICA ============ -->
@@ -1724,8 +1724,11 @@ UC.capraS = function ({ psa, gleasonCat, margin, svi, ece, lni }) {
     margen: margin ? 2 : 0, vesiculas: svi ? 2 : 0, extension: ece ? 1 : 0, ganglios: lni ? 1 : 0,
   };
   const total = Object.values(pts).reduce((a, b) => a + b, 0);
-  const grp = total <= 2 ? ['Bajo riesgo', 'ok'] : total <= 5 ? ['Riesgo intermedio', 'warn'] : ['Alto riesgo', 'risk'];
-  return { pts, total, group: grp[0], sev: grp[1] };
+  const grp = total <= 2 ? ['Bajo riesgo de recidiva', 'ok'] : total <= 5 ? ['Riesgo intermedio de recidiva', 'warn'] : ['Alto riesgo de recidiva', 'risk'];
+  // Supervivencia libre de progresión a 3 y 5 años por puntuación (Cooperberg, Cancer 2011, tabla 2; 9–12 agrupados).
+  const PFP = [[96.3, 94.5], [95.3, 91.0], [89.8, 83.3], [80.7, 72.8], [74.9, 70.2], [63.1, 42.5], [49.2, 25.9], [50.9, 26.9], [26.9, 12.3], [7.3, 0]];
+  const [pfp3, pfp5] = PFP[Math.min(total, 9)];
+  return { pts, total, group: grp[0], sev: grp[1], pfp3, pfp5 };
 };
 
 // Recidiva bioquímica: grupos de riesgo EAU.
@@ -3479,9 +3482,12 @@ const CTCAE_TAGS = [['A', 'ARTA y ADT'], ['I', 'Inmunoterapia'], ['Q', 'Quimiote
     const f = { margin: $('#cs-mar').checked, svi: $('#cs-svi').checked, ece: $('#cs-ece').checked, lni: $('#cs-lni').checked };
     const r = UC.capraS({ psa, gleasonCat: gl, ...f });
     if (!r) { out.innerHTML = missing('PSA preoperatorio'); copyText.capras = ''; return; }
-    out.innerHTML = metric('CAPRA-S', r.total, '/ 12') + chip(r.sev, r.group);
+    const rec3 = fmt(100 - r.pfp3, 1), rec5 = fmt(100 - r.pfp5, 1);
+    out.innerHTML = metric('CAPRA-S', r.total, '/ 12') + chip(r.sev, r.group) +
+      metric('Recidiva a 3 años', rec3, '%', 'sm') + metric('Recidiva a 5 años', rec5, '%', 'sm') +
+      `<p class="detail">Libre de recidiva: ${fmt(r.pfp3, 1)} % a 3 años y ${fmt(r.pfp5, 1)} % a 5 años${r.total >= 9 ? ' (puntuaciones ≥ 9 agrupadas)' : ''}. Grupos: bajo 0–2, intermedio 3–5, alto ≥ 6. Recidiva: PSA &gt; 0,2 en dos determinaciones o tratamiento de rescate.</p>`;
     const pos = [f.margin && 'margen positivo', f.svi && 'invasión de vesículas', f.ece && 'extensión extracapsular', f.lni && 'afectación ganglionar'].filter(Boolean);
-    copyText.capras = `CAPRA-S ${r.total}/12 (${r.group.toLowerCase()}): PSA preoperatorio ${fmt(psa, 1)} ng/mL, Gleason ${$('#cs-gl').selectedOptions[0].text}${pos.length ? ', ' + pos.join(', ') : ', sin factores anatomopatológicos adversos'}.`;
+    copyText.capras = `CAPRA-S ${r.total}/12 (${r.group.toLowerCase()}): PSA preoperatorio ${fmt(psa, 1)} ng/mL, Gleason ${$('#cs-gl').selectedOptions[0].text}${pos.length ? ', ' + pos.join(', ') : ', sin factores anatomopatológicos adversos'}. Riesgo estimado de recidiva ${rec3} % a 3 años y ${rec5} % a 5 años (Cooperberg 2011).`;
   }
 
   /* ---------- Recidiva bioquímica ---------- */
