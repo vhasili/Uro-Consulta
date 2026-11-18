@@ -522,7 +522,7 @@ footer.page strong { color: var(--ink); }
       <div class="ref" id="bg-ref"></div>
     </article>
 
-    <!-- ============ ROACH ============ -->
+    <!-- ============ ROTTERDAM ============ -->
     <article class="card" id="c-rpcrc" data-tab="prostata" data-keys="rotterdam swop erspc rpcrc calculadora de riesgo riesgo de cancer biopsia prostata volumen tacto rectal dre psa roobol">
       <div class="card-h">
         <div><span class="kind">Calculadora</span><h2>Rotterdam (ERSPC / SWOP): riesgo de cáncer en la biopsia</h2></div>
@@ -531,63 +531,26 @@ footer.page strong { color: var(--ink); }
       <div class="card-b">
         <div class="inputs">
           <div class="row">
+            <label class="field"><span>Edad</span><span class="unit"><input id="rp-age" inputmode="decimal" autocomplete="off" value="65"><i>años</i></span></label>
             <label class="field"><span>PSA</span><span class="unit"><input id="rp-psa" inputmode="decimal" autocomplete="off" value="4,5"><i>ng/mL</i></span></label>
             <label class="field"><span>Tacto rectal</span><select id="rp-dre"><option value="0" selected>Normal</option><option value="1">Sospechoso</option></select></label>
-            <label class="field"><span>Volumen prostático</span><span class="unit"><input id="rp-vol" inputmode="decimal" autocomplete="off" value="40" placeholder="opcional"><i>mL</i></span></label>
-          </div>
-          <div class="row">
             <label class="field"><span>Antecedentes</span><select id="rp-prior"><option value="0" selected>Sin PSA ni biopsia previos (calculadora 3)</option><option value="1">PSA previo, sin biopsia (calculadora 4)</option><option value="2">Biopsia previa negativa (calculadora 4)</option></select></label>
           </div>
-          <p class="hint">El volumen puede estimarse por tacto (≈ 25, 40 o 60 mL), ecografía o RM; el modelo lo agrupa en esas tres clases. Sin volumen se usa el modelo de PSA y tacto.</p>
+          <div class="row">
+            <label class="field"><span>Volumen medido por</span><select id="rp-src"><option value="dre">Tacto (estimación)</option><option value="trus" selected>Ecografía transrectal</option><option value="mri">Resonancia magnética</option></select></label>
+            <label class="field" id="rp-volc-f"><span>Tamaño por tacto</span><select id="rp-volc"><option value="">No valorado</option><option value="25">Pequeña (≈ 25 mL)</option><option value="40" selected>Mediana (≈ 40 mL)</option><option value="60">Grande (≈ 60 mL)</option></select></label>
+            <label class="field" id="rp-vol-f"><span>Volumen prostático</span><span class="unit"><input id="rp-vol" inputmode="decimal" autocomplete="off" value="40" placeholder="o medidas"><i>mL</i></span></label>
+          </div>
+          <div class="row" id="rp-dims">
+            <label class="field"><span>Longitud (craneocaudal)</span><span class="unit"><input id="rp-l" inputmode="decimal" autocomplete="off" placeholder="opcional"><i>cm</i></span></label>
+            <label class="field"><span>Anchura (transversal)</span><span class="unit"><input id="rp-w" inputmode="decimal" autocomplete="off" placeholder="opcional"><i>cm</i></span></label>
+            <label class="field"><span>Altura (anteroposterior)</span><span class="unit"><input id="rp-h" inputmode="decimal" autocomplete="off" placeholder="opcional"><i>cm</i></span></label>
+          </div>
+          <p class="hint">Si no escribes el volumen, se calcula con las tres medidas (elipsoide: L × A × Al × 0,52). El modelo agrupa el volumen en 25, 40 o 60 mL. Sin volumen se usa el modelo de PSA y tacto.</p>
         </div>
         <div class="result" aria-live="polite" id="rp-out"></div>
       </div>
-      <div class="ref">Calculadoras 3 y 4 de Rotterdam con volumen por tacto (Roobol et al., Eur Urol 2012; fórmulas publicadas en Roobol et al., World J Urol 2012;30:149-55). Volumen en clases: &lt; 30 mL → 25; 30–49 → 40; ≥ 50 → 60. Calculadora 3: logit = −1,826 + 1,024 × (log₂PSA − 2) − 1,50 × (log₂vol − 5,4) + 0,992 × tacto. Calculadora 4: logit = −1,470 − 0,677 × biopsia previa + (0,576 − 0,423 × biopsia previa) × (log₂PSA − 2) − 1,043 × (log₂vol − 5,5) + 0,68 × tacto. Alto riesgo (Gleason ≥ 7 y/o &gt; T2b): coeficientes obtenidos de las odds ratio y constantes de la tabla 2 de Roobol, Eur Urol 2012;61:577-83 (constante publicada con dos decimales, 0,03: el resultado puede diferir algún punto del de la web). Desarrollada en varones de 55 a 74 años con PSA ≥ 3 del ERSPC Rotterdam y biopsia sextante: con biopsias de 10–12 cilindros o en población clínica tiende a infraestimar. La versión actual de la web oficial (ISUP 2014, cribiforme y RM) usa otros coeficientes; para esa, el enlace de la ficha de enlaces oficiales.</div>
-    </article>
-
-    <article class="card" id="c-roach" data-tab="prostata" data-keys="roach ganglios afectacion ganglionar extension extracapsular vesiculas seminales radioterapia pelvis formula">
-      <div class="card-h">
-        <div><span class="kind">Fórmula</span><h2>Fórmulas de Roach: ganglios, extensión extracapsular y vesículas seminales</h2></div>
-        <button class="btn copy" type="button" data-copy="roach">Copiar</button>
-      </div>
-      <div class="card-b">
-        <div class="inputs">
-          <div class="row">
-            <label class="field"><span>PSA</span><span class="unit"><input id="ro-psa" inputmode="decimal" autocomplete="off" value="12"><i>ng/mL</i></span></label>
-            <label class="field"><span>Gleason primario</span><select id="ro-gp"><option>3</option><option selected>4</option><option>5</option></select></label>
-            <label class="field"><span>Gleason secundario</span><select id="ro-gs"><option selected>3</option><option>4</option><option>5</option></select></label>
-          </div>
-          <div><button class="btn" type="button" data-fill="roach">Usar datos de «Grupo de riesgo»</button></div>
-        </div>
-        <div class="result" aria-live="polite" id="ro-out"></div>
-      </div>
-      <div class="ref">Ganglios (%) = ⅔ × PSA + (Gleason − 6) × 10. Extensión extracapsular (%) = 1,5 × PSA + (Gleason − 3) × 10. Vesículas seminales (%) = PSA + (Gleason − 6) × 10. Derivadas de las tablas de Partin en la era pre-PSA moderna: en pacientes actuales sobreestiman el riesgo ganglionar (en SEER 2004, unas 16 veces con Roach ≤ 10 %, 7 veces entre 10 y 20 % y 2,5 veces por encima del 20 %). Útiles como estimación rápida en radioterapia; para indicar linfadenectomía, Briganti o MSKCC.</div>
-    </article>
-
-    <!-- ============ CAPRA ============ -->
-    <article class="card" id="c-capra" data-tab="prostata" data-keys="capra ucsf cooperberg riesgo pronostico prostata puntuacion">
-      <div class="card-h">
-        <div><span class="kind">Puntuación</span><h2>UCSF-CAPRA</h2></div>
-        <button class="btn copy" type="button" data-copy="capra">Copiar</button>
-      </div>
-      <div class="card-b">
-        <div class="inputs">
-          <div class="row">
-            <label class="field"><span>Edad</span><span class="unit"><input id="cp-age" inputmode="numeric" autocomplete="off" value="66"><i>años</i></span></label>
-            <label class="field"><span>PSA</span><span class="unit"><input id="cp-psa" inputmode="decimal" autocomplete="off" value="8,2"><i>ng/mL</i></span></label>
-            <label class="field"><span>Estadio clínico</span><select id="cp-ct"><option value="T2a" selected>cT1–T2</option><option value="T3a">cT3a</option><option value="T3b">cT3b o más</option></select></label>
-          </div>
-          <div class="row">
-            <label class="field"><span>Gleason primario</span><select id="cp-gp"><option selected>3</option><option>4</option><option>5</option></select></label>
-            <label class="field"><span>Gleason secundario</span><select id="cp-gs"><option>3</option><option selected>4</option><option>5</option></select></label>
-            <label class="field"><span>Cilindros positivos</span><input id="cp-pos" inputmode="numeric" autocomplete="off" value="4"></label>
-            <label class="field"><span>Cilindros totales</span><input id="cp-tot" inputmode="numeric" autocomplete="off" value="12"></label>
-          </div>
-          <div><button class="btn" type="button" data-fill="capra">Usar datos de «Grupo de riesgo»</button></div>
-        </div>
-        <div class="result" aria-live="polite" id="cp-out"></div>
-      </div>
-      <div class="ref">Cooperberg et al., J Urol 2005 (tabla de UCSF). Edad ≥ 50: 1. PSA &gt; 6–10: 1; &gt; 10–20: 2; &gt; 20–30: 3; &gt; 30: 4. Patrón 4 o 5 secundario: 1; primario: 3. cT3a: 1. Cilindros positivos ≥ 34 %: 1. Total 0–10: bajo 0–2, intermedio 3–5, alto 6–10. No está definido para cT3b o superior.</div>
+      <div class="ref">Calculadoras 3 y 4 de Rotterdam con volumen por tacto (Roobol et al., Eur Urol 2012; fórmulas publicadas en Roobol et al., World J Urol 2012;30:149-55). Volumen en clases: &lt; 30 mL → 25; 30–49 → 40; ≥ 50 → 60. Calculadora 3: logit = −1,826 + 1,024 × (log₂PSA − 2) − 1,50 × (log₂vol − 5,4) + 0,992 × tacto. Calculadora 4: logit = −1,470 − 0,677 × biopsia previa + (0,576 − 0,423 × biopsia previa) × (log₂PSA − 2) − 1,043 × (log₂vol − 5,5) + 0,68 × tacto. Alto riesgo (Gleason ≥ 7 y/o &gt; T2b): coeficientes obtenidos de las odds ratio y constantes de la tabla 2 de Roobol, Eur Urol 2012;61:577-83 (constante publicada con dos decimales, 0,03: el resultado puede diferir algún punto del de la web). La edad no entra en la fórmula; solo avisa fuera de 55–74 años. Desarrollada en varones de 55 a 74 años con PSA ≥ 3 del ERSPC Rotterdam y biopsia sextante: con biopsias de 10–12 cilindros o en población clínica tiende a infraestimar. Indicación de RM según el proyecto PRAISE-U (protocolo «Risk-stratified Approach to Implementing Population-based Prostate Cancer Screening in Five Pilot Sites in the European Union»): riesgo intermedio/alto si la probabilidad de cáncer de alto grado (ISUP ≥ 2) es ≥ 4 % o la de cualquier cáncer ≥ 20 %. La versión actual de la web oficial (ISUP 2014, cribiforme y RM) usa otros coeficientes; para esa, el enlace de la ficha de enlaces oficiales.</div>
     </article>
 
     <!-- ============ CAPRA-S ============ -->
@@ -3475,58 +3438,39 @@ const CTCAE_TAGS = [['A', 'ARTA y ADT'], ['I', 'Inmunoterapia'], ['Q', 'Quimiote
     copyText.cci = `Charlson ajustado por edad ${r.total} (comorbilidad ${r.cci} + edad ${r.agePts})${named.length ? ': ' + named.map(n => /^[A-Z]{2,}/.test(n) ? n : n[0].toLowerCase() + n.slice(1)).join(', ') : ''}. Supervivencia estimada a 10 años ${s < 1 ? '< 1' : fmt(s, 0)} %.`;
   }
 
-  /* ---------- Rellenar desde «Grupo de riesgo» ---------- */
-  function fillFromRisk(target) {
-    const psa = $('#r-psa').value, gp = $('#r-gp').value, gs = $('#r-gs').value;
-    if (target === 'roach') { $('#ro-psa').value = psa; $('#ro-gp').value = gp; $('#ro-gs').value = gs; updRoach(); }
-    if (target === 'capra') {
-      $('#cp-psa').value = psa; $('#cp-gp').value = gp; $('#cp-gs').value = gs;
-      const ti = UC.tIndex($('#r-ct').value);
-      $('#cp-ct').value = ti <= UC.tIndex('T2c') ? 'T2a' : ti === UC.tIndex('T3a') ? 'T3a' : 'T3b';
-      $('#cp-pos').value = $('#r-pos').value; $('#cp-tot').value = $('#r-tot').value;
-      updCapra();
-    }
-  }
-  $$('[data-fill]').forEach(b => b.addEventListener('click', () => fillFromRisk(b.dataset.fill)));
 
-  /* ---------- Roach ---------- */
+  /* ---------- Rotterdam ---------- */
   const pctCap = x => x <= 0 ? '0' : x >= 100 ? '≥ 100' : fmt(x, 0);
   function updRpcrc() {
-    const psa = v('rp-psa'), dre = +$('#rp-dre').value, volRaw = v('rp-vol'), prior = +$('#rp-prior').value, out = $('#rp-out');
-    const vol = volRaw > 0 ? volRaw : null;
+    const age = v('rp-age'), psa = v('rp-psa'), dre = +$('#rp-dre').value, prior = +$('#rp-prior').value, out = $('#rp-out');
+    const ageOut = age > 0 && (age < 55 || age > 74);
+    const src = $('#rp-src').value, byDre = src === 'dre';
+    $('#rp-volc-f').hidden = !byDre; $('#rp-vol-f').hidden = byDre; $('#rp-dims').hidden = byDre;
+    let vol = null, volHow = '';
+    if (byDre) { const c = +$('#rp-volc').value; if (c) { vol = c; volHow = 'estimado por tacto'; } }
+    else {
+      const direct = v('rp-vol'), l = v('rp-l'), w = v('rp-w'), h = v('rp-h');
+      if (direct > 0) { vol = direct; volHow = src === 'mri' ? 'por RM' : 'por ecografía'; }
+      else if (l > 0 && w > 0 && h > 0) { vol = l * w * h * Math.PI / 6; volHow = (src === 'mri' ? 'por RM' : 'por ecografía') + ', elipsoide'; }
+    }
+    const psad = !byDre && vol && psa > 0 ? psa / vol : null;
     const r = UC.rpcrc({ psa, dre, vol, prior });
     if (!r) { out.innerHTML = missing('PSA'); copyText.rpcrc = ''; return; }
     const pc = r.p * 100, d = pc < 10 ? 1 : 0;
     const ctx = ['sin PSA ni biopsia previos', 'PSA previo sin biopsia', 'biopsia previa negativa'][prior];
-    const how = r.cls ? `Calculadora ${r.model}, volumen ${fmt(vol, 0)} mL → clase ${r.cls}.` : 'Sin volumen: modelo de PSA y tacto (menos preciso).';
+    const how = r.cls ? `Calculadora ${r.model}, volumen ${fmt(vol, 0)} mL (${volHow}) → clase ${r.cls}.` : 'Sin volumen: modelo de PSA y tacto (menos preciso).';
     const ph = r.pHG === null ? null : r.pHG * 100, dh = ph !== null && ph < 10 ? 1 : 0;
-    out.innerHTML = metric('Cáncer en la biopsia (cualquiera)', fmt(pc, d), '%') +
+    // PRAISE-U: riesgo intermedio/alto si alto grado ≥ 4 % o cualquier cáncer ≥ 20 % → indicar RM.
+    const rnd = (x, k) => Math.round(x * 10 ** k) / 10 ** k; // compara con el valor que se muestra
+    const elevated = rnd(pc, d) >= 20 || (ph !== null && rnd(ph, dh) >= 4);
+    const praise = elevated ? 'riesgo intermedio/alto: indicada RM prostática' : 'riesgo bajo: RM no indicada por riesgo';
+    out.innerHTML = chip(elevated ? 'warn' : 'ok', elevated ? 'Riesgo intermedio/alto → RM' : 'Riesgo bajo → sin RM') +
+      metric('Cáncer en la biopsia (cualquiera)', fmt(pc, d), '%') +
       (ph === null ? '' : metric('Cáncer de alto riesgo', fmt(ph, dh), '%', 'sm')) +
-      `<p class="detail">${how} ${psa < 3 ? 'PSA &lt; 3: fuera del rango en que se desarrolló. ' : ''}${ph === null ? 'El riesgo de alto grado necesita el volumen. ' : 'Alto riesgo: Gleason ≥ 7 y/o estadio &gt; T2b. '}Biopsia sextante.</p>`;
-    copyText.rpcrc = `Rotterdam/ERSPC ${r.cls ? 'calculadora ' + r.model : 'PSA + tacto'} (PSA ${fmt(psa, 1)} ng/mL, tacto ${dre ? 'sospechoso' : 'normal'}${r.cls ? ', volumen ' + fmt(vol, 0) + ' mL' : ''}, ${ctx}): riesgo de cáncer en biopsia ${fmt(pc, d)} %${ph === null ? '' : `, de cáncer de alto riesgo (Gleason ≥ 7 y/o > T2b) ${fmt(ph, dh)} %`}.`;
-  }
-
-  function updRoach() {
-    const psa = v('ro-psa'), gp = +$('#ro-gp').value, gs = +$('#ro-gs').value, out = $('#ro-out');
-    const r = UC.roach(psa, gp + gs);
-    if (!r) { out.innerHTML = missing('PSA'); copyText.roach = ''; return; }
-    out.innerHTML = metric('Afectación ganglionar', pctCap(r.ln), '%') + metric('Extensión extracapsular', pctCap(r.ece), '%', 'sm') + metric('Invasión de vesículas seminales', pctCap(r.sv), '%', 'sm') +
-      `<p class="detail">Gleason ${gp}+${gs} = ${gp + gs}. Tiende a sobreestimar en pacientes actuales.</p>`;
-    copyText.roach = `Roach (PSA ${fmt(psa, 1)} ng/mL, Gleason ${gp}+${gs}): riesgo ganglionar ${pctCap(r.ln)} %, extensión extracapsular ${pctCap(r.ece)} %, invasión de vesículas seminales ${pctCap(r.sv)} %.`;
-  }
-
-  /* ---------- CAPRA ---------- */
-  function updCapra() {
-    const age = v('cp-age'), psa = v('cp-psa'), gp = +$('#cp-gp').value, gs = +$('#cp-gs').value, ct = $('#cp-ct').value;
-    const pos = v('cp-pos'), tot = v('cp-tot'), out = $('#cp-out');
-    const pct = tot > 0 && pos >= 0 ? 100 * pos / tot : NaN;
-    const r = UC.capra({ age, psa, gp, gs, ct, pctPos: pct });
-    if (!r) { out.innerHTML = missing(['edad', 'PSA', 'cilindros positivos y totales'].filter((_, i) => !Number.isFinite([age, psa, pct][i])).join(', ')); copyText.capra = ''; return; }
-    if (r.outOfRange) { out.innerHTML = `<p class="missing">CAPRA no está definido para cT3b o superior.</p>`; copyText.capra = ''; return; }
-    const p = r.pts;
-    out.innerHTML = metric('CAPRA', r.total, '/ 10') + chip(r.sev, r.group) +
-      `<p class="detail">Edad <b>${p.edad}</b> · PSA <b>${p.psa}</b> · Gleason <b>${p.gleason}</b> · Estadio <b>${p.estadio}</b> · Cilindros <b>${p.cilindros}</b> (${fmt(pct, 0)} %)</p>`;
-    copyText.capra = `UCSF-CAPRA ${r.total}/10 (${r.group.toLowerCase()}): edad ${p.edad}, PSA ${p.psa}, Gleason ${p.gleason}, estadio ${p.estadio}, cilindros ${p.cilindros} (${fmt(pct, 0)} % positivos).`;
+      (psad === null ? '' : metric('Densidad de PSA', fmt(psad, 2), 'ng/mL/cc', 'sm')) +
+      `<p class="detail">${how} ${psa < 3 ? 'PSA &lt; 3: fuera del rango en que se desarrolló. ' : ''}${ageOut ? `<b>Edad ${fmt(age, 0)} años: fuera del rango del modelo (55–74); resultado menos fiable.</b> ` : ''}${ph === null ? 'El riesgo de alto grado necesita el volumen. ' : 'Alto riesgo: Gleason ≥ 7 y/o estadio &gt; T2b. '}Biopsia sextante.</p>
+      <p class="detail">PRAISE-U: RM si el riesgo de alto grado es ≥ 4 % o el de cualquier cáncer ≥ 20 %.${ph === null ? ' Sin volumen solo se aplica el umbral del 20 %.' : ''}</p>`;
+    copyText.rpcrc = `Rotterdam/ERSPC ${r.cls ? 'calculadora ' + r.model : 'PSA + tacto'} (${age > 0 ? 'edad ' + fmt(age, 0) + ' años, ' : ''}PSA ${fmt(psa, 1)} ng/mL, tacto ${dre ? 'sospechoso' : 'normal'}${r.cls ? ', volumen ' + fmt(vol, 0) + ' mL ' + volHow : ''}, ${ctx}${psad === null ? '' : ', densidad de PSA ' + fmt(psad, 2)}): riesgo de cáncer en biopsia ${fmt(pc, d)} %${ph === null ? '' : `, de cáncer de alto riesgo (Gleason ≥ 7 y/o > T2b) ${fmt(ph, dh)} %`}. Según PRAISE-U (alto grado ≥ 4 % o cualquier cáncer ≥ 20 %): ${praise}.${ageOut ? ' Edad fuera del rango del modelo (55–74 años): resultado menos fiable.' : ''}`;
   }
 
   /* ---------- CAPRA-S ---------- */
@@ -4284,7 +4228,7 @@ const CTCAE_TAGS = [['A', 'ARTA y ADT'], ['I', 'Inmunoterapia'], ['Q', 'Quimiote
 
   /* ---------- Pestañas y búsqueda ---------- */
   const norm = s => s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
-  const ORDER = ['c-riesgo', 'c-psadt', 'c-brig', 'c-vol', 'c-rpcrc', 'c-roach', 'c-capra', 'c-capras', 'c-bcr', 'c-lk-prostata', 'c-ctcae', 'c-inter',
+  const ORDER = ['c-rpcrc', 'c-vol', 'c-riesgo', 'c-psadt', 'c-brig', 'c-capras', 'c-bcr', 'c-lk-prostata', 'c-ctcae', 'c-inter',
     'c-lk-vejiga', 'c-nmibc', 'c-eortc', 'c-bcgu', 'c-renalns', 'c-padua', 'c-leib', 'c-imdc',
     'c-ipss', 'c-oabq', 'c-iciq', 'c-bpic', 'c-uds', 'c-noct', 'c-shim', 'c-ehs', 'c-iief', 'c-ft', 'c-popq', 'c-pot', 'c-lk-suelo',
     'c-fu-prostata', 'c-fu-nmibc', 'c-fu-mibc', 'c-fu-utuc', 'c-fu-rinon', 'c-fu-testiculo', 'c-fu-pene', 'c-fu-uretra',
@@ -4367,8 +4311,8 @@ const CTCAE_TAGS = [['A', 'ARTA y ADT'], ['I', 'Inmunoterapia'], ['Q', 'Quimiote
   $('#ipq-4').checked = true;
   [2, 3, 2, 2, 3, 0, 1, 1].forEach((x, i) => { $('#g8-' + i).value = String(x); });
 
-  const all = () => { updBcgu(); updLeib(); updRpcrc(); updRiesgo(); updVol(); updPsaDT(); updRenal(); updSc(); updIpss(); updG8(); updConv(); updUds(); updNoct(); updPopq(); updShim(); updEhs(); updBpic(); updCci(); updRoach(); updCapra(); updCapraS(); updBcr(); updImdc(); updFt(); updIciq(); updRenalNs(); updPadua(); updNmibc(); updEortc(); updIief(); updOabq(); updPot(); updBrig(); updPs(); };
-  [['c-bcgu', updBcgu], ['c-leib', updLeib], ['c-rpcrc', updRpcrc], ['c-roach', updRoach], ['c-capra', updCapra], ['c-capras', updCapraS], ['c-bcr', updBcr], ['c-imdc', updImdc], ['c-ft', updFt], ['c-iciq', updIciq], ['c-renalns', updRenalNs], ['c-padua', updPadua], ['c-nmibc', updNmibc], ['c-eortc', updEortc], ['c-iief', updIief], ['c-oabq', updOabq], ['c-pot', updPot], ['c-brig', updBrig]].forEach(([id, fn]) => { $('#' + id).addEventListener('input', fn); $('#' + id).addEventListener('change', fn); });
+  const all = () => { updBcgu(); updLeib(); updRpcrc(); updRiesgo(); updVol(); updPsaDT(); updRenal(); updSc(); updIpss(); updG8(); updConv(); updUds(); updNoct(); updPopq(); updShim(); updEhs(); updBpic(); updCci(); updCapraS(); updBcr(); updImdc(); updFt(); updIciq(); updRenalNs(); updPadua(); updNmibc(); updEortc(); updIief(); updOabq(); updPot(); updBrig(); updPs(); };
+  [['c-bcgu', updBcgu], ['c-leib', updLeib], ['c-rpcrc', updRpcrc], ['c-capras', updCapraS], ['c-bcr', updBcr], ['c-imdc', updImdc], ['c-ft', updFt], ['c-iciq', updIciq], ['c-renalns', updRenalNs], ['c-padua', updPadua], ['c-nmibc', updNmibc], ['c-eortc', updEortc], ['c-iief', updIief], ['c-oabq', updOabq], ['c-pot', updPot], ['c-brig', updBrig]].forEach(([id, fn]) => { $('#' + id).addEventListener('input', fn); $('#' + id).addEventListener('change', fn); });
   $('#c-uds').addEventListener('input', updUds);
   $('#c-noct').addEventListener('input', updNoct);
   $('#c-popq').addEventListener('input', updPopq); $('#c-popq').addEventListener('change', updPopq);
