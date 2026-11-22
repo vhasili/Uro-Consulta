@@ -117,9 +117,15 @@ body.searching .tab[aria-selected="true"] { border-bottom-color: transparent; co
 .lm-svg text { fill: currentColor; font: 600 10px var(--f-body); text-anchor: middle; dominant-baseline: middle; pointer-events: none; }
 .lm-svg .lm-ttl { font-size: 11.5px; text-anchor: start; text-transform: uppercase; letter-spacing: 0.06em; fill: var(--muted); }
 .lm-svg .lm-sm { font-size: 9px; }
+.lm-svg .lm-xs { font-size: 7.5px; }
 .lm-svg .lm-l { text-anchor: start; }
 .lm-svg .lm-r { text-anchor: end; }
 .lm-svg .lm-bg { fill: var(--surface); pointer-events: none; }
+.lm-svg [data-s] { stroke: currentColor; stroke-opacity: 0.4; stroke-width: 1; pointer-events: none; }
+.lm-svg [data-s].on { fill: var(--lc); fill-opacity: 0.8; }
+.lm-svg .lm-ves, .lm-svg .lm-rec { fill: none; stroke: currentColor; stroke-opacity: 0.5; stroke-width: 1.5; pointer-events: none; }
+.lm-svg .lm-rec { stroke-dasharray: 4 3; }
+.lm-svg .lm-uline { fill: none; stroke: #8a5a2b; stroke-width: 2.2; pointer-events: none; }
 .lm-svg .z-dome { fill: url(#lm-hatch); fill-opacity: 1; }
 .lm-svg .lm-uraco { fill: var(--sunken); stroke: currentColor; stroke-opacity: 0.5; pointer-events: none; }
 .lm-svg .lm-ur { fill: #8a5a2b; pointer-events: none; }
@@ -478,7 +484,7 @@ footer.page strong { color: var(--ink); }
           <div class="row">
             <label class="field"><span>Prueba</span><select id="mapp-mod" data-mod><option value="rm" selected>RM multiparamétrica (PI-RADS)</option><option value="mus">Micro-ecografía, microUS (PRI-MUS)</option></select></label>
           </div>
-          <p class="hint">Pulsa los sectores de la lesión activa (otra pulsación la quita). Para otra lesión, «Añadir lesión». Cortes axiales con la cara anterior arriba; el lado derecho del paciente (D) a la izquierda. «Copiar» copia el texto y la imagen del mapa; si la historia no admite imágenes, se pega solo el texto y la imagen puede guardarse aparte.</p>
+          <p class="hint">Pulsa los sectores de la lesión activa (otra pulsación la quita). Para otra lesión, «Añadir lesión». Cortes axiales con la cara anterior arriba; el lado derecho del paciente (D) a la izquierda. Los tres cortes sagitales de abajo (derecho, medial con la uretra e izquierdo) se colorean solos con lo que marques en axial. «Copiar» copia el texto y la imagen del mapa; si la historia no admite imágenes, se pega solo el texto. Sin nada marcado, «Imprimir» y «Guardar imagen» dan el mapa en blanco para dibujarlo a mano.</p>
           <div id="mapp-map"></div>
           <div class="lm-x"><button type="button" class="btn" data-z="vs-d">Vesícula seminal D</button><button type="button" class="btn" data-z="vs-i">Vesícula seminal I</button><button type="button" class="btn" data-z="esf">Esfínter uretral</button></div>
         </div>
@@ -495,7 +501,7 @@ footer.page strong { color: var(--ink); }
       </div>
       <div class="card-b">
         <div class="inputs">
-          <p class="hint">Pulsa las zonas de la lesión activa (otra pulsación la quita). Para otra lesión, «Añadir lesión». Vejiga abierta hacia atrás, como en el esquema de la RTU: cúpula arriba, pared anterior desplegada a ambos lados, posterior en el centro sobre el trígono; el lado derecho del paciente a la izquierda. «Copiar» copia el texto y la imagen del mapa.</p>
+          <p class="hint">Pulsa las zonas de la lesión activa (otra pulsación la quita). Para otra lesión, «Añadir lesión». Vejiga abierta hacia atrás, como en el esquema de la RTU: cúpula arriba, pared anterior desplegada a ambos lados, posterior en el centro sobre el trígono; el lado derecho del paciente a la izquierda. «Copiar» copia el texto y la imagen del mapa. Sin nada marcado, «Imprimir» y «Guardar imagen» dan el mapa en blanco para dibujarlo a mano.</p>
           <div id="mapv-map"></div>
         </div>
         <div class="result lm-list" aria-live="polite" id="mapv-list"></div>
@@ -4342,7 +4348,45 @@ const CTCAE_TAGS = [['A', 'ARTA y ADT'], ['I', 'Inmunoterapia'], ['Q', 'Quimiote
       body += `<circle class="lm-ur" cx="${cx}" cy="${r1(cyT)}" r="4"/>`;
       y0 = cy + s.ry + 8;
     });
-    return `<svg class="lm-svg" viewBox="0 0 ${W} ${Math.ceil(y0)}" role="img" aria-label="Mapa de sectores prostáticos PI-RADS v2.1"><defs>${defs}</defs>${body}${labels}</svg>`;
+    // Tres cortes sagitales orientativos (derecho, medial con la uretra e izquierdo): no se pulsan,
+    // se colorean con los sectores axiales. Anterior a la izquierda, base arriba.
+    const sy = Math.ceil(y0) + 4, k = 0.76;
+    const SAG = 'M30,30 C58,22 96,24 118,34 C130,62 120,100 84,134 C80,139 72,139 68,134 C38,106 20,62 30,30 Z';
+    const BANDS = { b: [0, 62], m: [62, 100], a: [100, 170] };
+    defs += `<clipPath id="lm-sag"><path d="${SAG}"/></clipPath><clipPath id="lm-sh-a"><rect x="0" y="0" width="77" height="170"/></clipPath><clipPath id="lm-sh-p"><rect x="77" y="0" width="93" height="170"/></clipPath>` +
+      Object.entries(BANDS).map(([b, [a, c]]) => `<clipPath id="lm-sb-${b}"><rect x="0" y="${a}" width="170" height="${c - a}"/></clipPath>`).join('');
+    const both = (l, sec) => `${l}-${sec}-d,${l}-${sec}-i`;
+    const R = '0,0 170,0 170,170 0,170';
+    const panel = (pn, dx, title) => {
+      const side = pn === 'med' ? null : pn;
+      const key = (l, sec) => side ? `${l}-${sec}-${side}` : both(l, sec);
+      const T = (x, y, t, cls = 'lm-xs') => `<text x="${(dx + k * x).toFixed(1)}" y="${(sy + 14 + k * y).toFixed(1)}" class="${cls}">${t}</text>`;
+      const tz = pn === 'med' ? 'cx="78" cy="64" rx="24" ry="40"' : 'cx="77" cy="62" rx="21" ry="36"';
+      let g = `<g transform="translate(${dx},${sy + 14}) scale(${k})"><g clip-path="url(#lm-sag)">`;
+      Object.keys(BANDS).forEach(l => {
+        g += `<g clip-path="url(#lm-sb-${l})">`;
+        if (pn === 'med') {
+          const post = l === 'b' ? 'cz' : 'pzpm';
+          g += `<polygon data-s="${key(l, post)}" class="${post === 'cz' ? 'z-cz' : 'z-pz2'}" points="${R}"/>` +
+            `<polygon class="lm-bg" points="0,0 50,0 58,170 0,170"/><polygon data-s="${key(l, 'afs')}" class="z-afs" points="0,0 50,0 58,170 0,170"/>`;
+        } else {
+          g += `<polygon data-s="${key(l, 'pza')}" class="z-pz" points="0,0 70,0 60,170 0,170"/><polygon data-s="${key(l, 'pzpl')}" class="z-pz" points="70,0 170,0 170,170 60,170"/>`;
+        }
+        g += `<ellipse class="lm-bg" ${tz}/><ellipse data-s="${key(l, 'tza')}" class="z-tz" clip-path="url(#lm-sh-a)" ${tz}/><ellipse data-s="${key(l, 'tzp')}" class="z-tz2" clip-path="url(#lm-sh-p)" ${tz}/></g>`;
+      });
+      g += `</g><path class="lm-out" d="${SAG}"/><path class="lm-ves" d="M32,28 C30,4 116,4 116,32"/>`;
+      if (pn === 'med') g += `<path class="lm-uline" d="M74,26 C66,60 66,100 76,136 L77,160"/><rect data-s="esf" class="z-pz2" x="67" y="140" width="20" height="13" rx="3"/>`;
+      else g += `<ellipse data-s="vs-${side}" class="z-cz" cx="114" cy="24" rx="17" ry="7" transform="rotate(-18 114 24)"/>`;
+      g += '</g>';
+      // Etiquetas fuera del grupo escalado para que no se encojan.
+      if (pn === 'med') g += T(40, 82, 'AFS') + T(66, 66, 'TZa') + T(90, 66, 'TZp') + T(104, 46, 'CZ') + T(100, 86, 'PZpm') + T(78, 120, 'PZpm') + T(96, 147, 'Esf.', 'lm-xs lm-l');
+      else g += T(40, 82, 'PZa') + T(66, 62, 'TZa') + T(88, 62, 'TZp') + T(108, 86, 'PZpl') + T(56, 118, 'PZa') + T(86, 118, 'PZpl') + T(114, 24, 'VS');
+      return g + T(74, 14, 'Vejiga') + T(76, 172, title, 'lm-sm');
+    };
+    const sag = `<text x="6" y="${sy + 6}" class="lm-ttl">Sagital</text><text x="${W - 6}" y="${sy + 6}" class="lm-sm lm-r">anterior a la izquierda · se colorea con lo marcado en axial</text>
+      <text x="1" y="${(sy + 14 + k * 44).toFixed(1)}" class="lm-xs lm-l">Base</text><text x="1" y="${(sy + 14 + k * 82).toFixed(1)}" class="lm-xs lm-l">Medio</text><text x="1" y="${(sy + 14 + k * 120).toFixed(1)}" class="lm-xs lm-l">Ápex</text>` +
+      panel('d', 4, 'Derecho') + panel('med', 108, 'Medial (uretra)') + panel('i', 212, 'Izquierdo');
+    return `<svg class="lm-svg" viewBox="0 0 ${W} ${Math.ceil(sy + 14 + k * 182)}" role="img" aria-label="Mapa de sectores prostáticos PI-RADS v2.1"><defs>${defs}</defs>${body}${labels}${sag}</svg>`;
   }
 
   // Vejiga abierta hacia atrás: la cúpula arriba, la pared anterior desplegada en las puntas laterales,
@@ -4439,7 +4483,8 @@ const CTCAE_TAGS = [['A', 'ARTA y ADT'], ['I', 'Inmunoterapia'], ['Q', 'Quimiote
         if (el.classList.contains('lm-pr') || el.classList.contains('lm-uraco')) fill = '#f1f3f5';
         if (fill.startsWith('url(')) fill = 'url(#lm-hatch)';
         d.setAttribute('fill', fill); d.setAttribute('fill-opacity', cs.fillOpacity);
-        d.setAttribute('stroke', cs.stroke === 'none' ? 'none' : el.classList.contains('act') ? cs.stroke : '#1f2937');
+        d.setAttribute('stroke', cs.stroke === 'none' ? 'none' : el.classList.contains('act') || el.classList.contains('lm-uline') ? cs.stroke : '#1f2937');
+        if (cs.strokeDasharray && cs.strokeDasharray !== 'none') d.setAttribute('stroke-dasharray', cs.strokeDasharray);
         d.setAttribute('stroke-opacity', cs.strokeOpacity); d.setAttribute('stroke-width', cs.strokeWidth);
       } else return;
       d.removeAttribute('class'); d.removeAttribute('style');
@@ -4494,12 +4539,22 @@ const CTCAE_TAGS = [['A', 'ARTA y ADT'], ['I', 'Inmunoterapia'], ['Q', 'Quimiote
         el.classList.toggle('act', !!st.les[st.act] && st.les[st.act].z.includes(k));
         el.style.setProperty('--lc', i >= 0 ? LES_COL[i % LES_COL.length] : '');
       });
+      $$('[data-s]', card).forEach(el => {
+        const keys = el.dataset.s.split(',');
+        const i = st.les.findIndex(L => L.z.some(k => keys.includes(k)));
+        el.classList.toggle('on', i >= 0);
+        el.style.setProperty('--lc', i >= 0 ? LES_COL[i % LES_COL.length] : '');
+      });
     }
     function txt() {
       const les = filled();
       copyText[key] = les.length ? c.head(les) + ' ' + les.map(c.line).join(' ') : '';
     }
-    MAP_IMG[key] = () => { const les = filled(); return mapCanvas(key, les.map(l => ({ color: l.color, text: c.line(l) }))); };
+    // Sin lesiones marcadas, la imagen sale en blanco con líneas para rellenar a mano.
+    const blankItems = () => [{ color: null, text: 'Paciente: ____________________   Fecha: _________' }, { color: null, text: ' ' },
+      ...[1, 2, 3].flatMap(n => [{ color: null, text: `Lesión ${n}: ________________________________` },
+        { color: null, text: `Tamaño: ________ ${c.unit}     ${c.xLabel()}: ______________` }, { color: null, text: ' ' }])];
+    MAP_IMG[key] = () => { const les = filled(); return mapCanvas(key, les.length ? les.map(l => ({ color: l.color, text: c.line(l) })) : blankItems()); };
     function render() {
       list.innerHTML = st.les.map((l, i) => `<div class="lm-les${i === st.act ? ' act' : ''}" style="--lc:${LES_COL[i % LES_COL.length]}">
           <div class="lm-head"><button type="button" class="lm-tag" data-a="sel" data-i="${i}">Lesión ${i + 1}${i === st.act ? ' · activa' : ''}</button>
@@ -4533,11 +4588,25 @@ const CTCAE_TAGS = [['A', 'ARTA y ADT'], ['I', 'Inmunoterapia'], ['Q', 'Quimiote
     const copyBtn = card.querySelector('.card-h .copy'), wrap = document.createElement('div'), save = document.createElement('button');
     wrap.className = 'card-btns'; copyBtn.replaceWith(wrap);
     save.className = 'btn'; save.type = 'button'; save.textContent = 'Guardar imagen'; save.title = 'Descarga el mapa con la leyenda en PNG';
+    save.title = 'Descarga el mapa en PNG; sin lesiones marcadas sale en blanco para rellenar a mano';
     save.addEventListener('click', () => {
-      if (!filled().length) { save.textContent = 'Faltan datos'; setTimeout(() => { save.textContent = 'Guardar imagen'; }, 1400); return; }
-      MAP_IMG[key]().then(cv => { const a = document.createElement('a'); a.download = (key === 'mapp' ? 'mapa-prostata' : 'mapa-vesical') + '.png'; a.href = cv.toDataURL('image/png'); a.click(); });
+      MAP_IMG[key]().then(cv => { const a = document.createElement('a'); a.download = (key === 'mapp' ? 'mapa-prostata' : 'mapa-vesical') + (filled().length ? '' : '-en-blanco') + '.png'; a.href = cv.toDataURL('image/png'); a.click(); });
     });
-    wrap.append(save, copyBtn);
+    const pr = document.createElement('button');
+    pr.className = 'btn'; pr.type = 'button'; pr.textContent = 'Imprimir'; pr.title = 'Imprime el mapa; sin lesiones marcadas sale en blanco para dibujar a mano';
+    pr.addEventListener('click', () => {
+      MAP_IMG[key]().then(cv => {
+        const sheet = $('#print-sheet');
+        sheet.innerHTML = `<img src="${cv.toDataURL('image/png')}" alt="Mapa" style="display:block;margin:0 auto;max-width:100%;max-height:265mm;width:auto;height:auto">`;
+        const img = sheet.querySelector('img'), go = () => {
+          document.body.classList.add('printing');
+          window.addEventListener('afterprint', () => { document.body.classList.remove('printing'); sheet.innerHTML = ''; }, { once: true });
+          window.print();
+        };
+        (img.decode ? img.decode() : Promise.resolve()).then(go, go);
+      });
+    });
+    wrap.append(pr, save, copyBtn);
     const reset = () => { st.les = [blank()]; st.act = 0; if (mod) mod.selectedIndex = 0; render(); };
     $('#clear-all').addEventListener('click', reset);
     reset();
