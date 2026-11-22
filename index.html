@@ -101,6 +101,40 @@ body.searching .tab[aria-selected="true"] { border-bottom-color: transparent; co
 .fu-t tbody th { font-weight: 600; width: 34%; }
 .fu-n { margin: 0; padding-left: 18px; font-size: 0.86rem; color: var(--muted); display: grid; gap: 3px; }
 .card.fu .clip { display: none; }
+
+/* Mapas de lesiones */
+.lm-svg { display: block; width: 100%; max-width: 360px; margin-inline: auto; color: var(--ink); -webkit-tap-highlight-color: transparent; }
+.lm-svg [data-z] { cursor: pointer; stroke: currentColor; stroke-opacity: 0.4; stroke-width: 1; transition: fill-opacity 0.12s; }
+.lm-svg [data-z]:hover { fill-opacity: 0.55; }
+.lm-svg .z-pz { fill: #b197fc; fill-opacity: 0.32; }
+.lm-svg .z-pz2 { fill: #9775fa; fill-opacity: 0.42; }
+.lm-svg .z-tz { fill: #ffd43b; fill-opacity: 0.45; }
+.lm-svg .z-tz2 { fill: #fab005; fill-opacity: 0.45; }
+.lm-svg .z-afs { fill: #74c0fc; fill-opacity: 0.4; }
+.lm-svg .z-cz { fill: #8ce99a; fill-opacity: 0.45; }
+.lm-svg [data-z].on { fill: var(--lc); fill-opacity: 0.8; }
+.lm-svg [data-z].act { stroke: var(--lc); stroke-opacity: 1; stroke-width: 2.5; }
+.lm-svg text { fill: currentColor; font: 600 10px var(--f-body); text-anchor: middle; dominant-baseline: middle; pointer-events: none; }
+.lm-svg .lm-ttl { font-size: 11.5px; text-anchor: start; text-transform: uppercase; letter-spacing: 0.06em; fill: var(--muted); }
+.lm-svg .lm-sm { font-size: 9px; }
+.lm-svg .lm-l { text-anchor: start; }
+.lm-svg .lm-r { text-anchor: end; }
+.lm-svg .lm-bg { fill: var(--surface); pointer-events: none; }
+.lm-svg .z-dome { fill: url(#lm-hatch); fill-opacity: 1; }
+.lm-svg .lm-uraco { fill: var(--sunken); stroke: currentColor; stroke-opacity: 0.5; pointer-events: none; }
+.lm-svg .lm-ur { fill: #8a5a2b; pointer-events: none; }
+.lm-svg .lm-pr { fill: var(--sunken); stroke: currentColor; stroke-opacity: 0.4; }
+.lm-svg .lm-out { fill: none; stroke: currentColor; stroke-opacity: 0.7; stroke-width: 1.5; pointer-events: none; }
+.lm-x { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; }
+.lm-x .btn.on { background: var(--lc); border-color: var(--lc); color: #fff; }
+.lm-list { display: grid; gap: 10px; }
+.lm-les { display: grid; gap: 6px; padding: 8px 10px; border: 1px solid var(--line); border-left: 5px solid var(--lc); border-radius: 8px; background: var(--surface); }
+.lm-les.act { outline: 2px solid var(--lc); outline-offset: -1px; }
+.lm-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.lm-tag { padding: 0; border: 0; background: none; color: inherit; font: 600 0.92rem var(--f-body); cursor: pointer; text-align: left; }
+.lm-del { width: 28px; height: 28px; border: 1px solid var(--line); border-radius: 6px; background: none; color: var(--muted); font-size: 1.1rem; line-height: 1; cursor: pointer; }
+.lm-z { margin: 0; font-size: 0.85rem; color: var(--muted); }
+.lm-f { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 8px; }
 @media (max-width: 599px) { .fu-t tbody th { width: 40%; } }
 
 /* Hoja imprimible de cuestionarios */
@@ -433,6 +467,42 @@ footer.page strong { color: var(--ink); }
     </article>
 
     <!-- ============ PRÓSTATA: VOLUMEN ============ -->
+    <!-- ============ MAPA DE LESIONES PROSTÁTICAS ============ -->
+    <article class="card" id="c-mapp" data-tab="prostata" data-keys="mapa lesiones prostata pirads pi-rads sectores zona periferica transicional rm resonancia localizacion biopsia dibujo esquema">
+      <div class="card-h">
+        <div><span class="kind">Mapa</span><h2>Localización de lesiones en la próstata (sectores PI-RADS)</h2></div>
+        <button class="btn copy" type="button" data-copy="mapp">Copiar</button>
+      </div>
+      <div class="card-b">
+        <div class="inputs">
+          <div class="row">
+            <label class="field"><span>Prueba</span><select id="mapp-mod" data-mod><option value="rm" selected>RM multiparamétrica (PI-RADS)</option><option value="mus">Micro-ecografía, microUS (PRI-MUS)</option></select></label>
+          </div>
+          <p class="hint">Pulsa los sectores de la lesión activa (otra pulsación la quita). Para otra lesión, «Añadir lesión». Cortes axiales con la cara anterior arriba; el lado derecho del paciente (D) a la izquierda. «Copiar» copia el texto y la imagen del mapa; si la historia no admite imágenes, se pega solo el texto y la imagen puede guardarse aparte.</p>
+          <div id="mapp-map"></div>
+          <div class="lm-x"><button type="button" class="btn" data-z="vs-d">Vesícula seminal D</button><button type="button" class="btn" data-z="vs-i">Vesícula seminal I</button><button type="button" class="btn" data-z="esf">Esfínter uretral</button></div>
+        </div>
+        <div class="result lm-list" aria-live="polite" id="mapp-list"></div>
+      </div>
+      <div class="ref">Mapa de sectores de PI-RADS v2.1 (Turkbey et al., Eur Urol 2019): AFS estroma fibromuscular anterior, TZa/TZp zona transicional anterior/posterior, CZ zona central (solo en la base), PZa zona periférica anterior, PZpl posterolateral, PZpm posteromedial. Micro-ecografía: puntuación PRI-MUS 1–5 (Ghai et al., Eur Urol 2016), localizada sobre el mismo mapa. Esquema propio, no a escala.</div>
+    </article>
+
+    <!-- ============ MAPA DE LESIONES VESICALES ============ -->
+    <article class="card" id="c-mapv" data-tab="vejiga" data-keys="mapa vesical lesiones vejiga cistoscopia tumor localizacion trigono meato cupula pared cuello rtu dibujo esquema">
+      <div class="card-h">
+        <div><span class="kind">Mapa</span><h2>Localización de lesiones en la vejiga</h2></div>
+        <button class="btn copy" type="button" data-copy="mapv">Copiar</button>
+      </div>
+      <div class="card-b">
+        <div class="inputs">
+          <p class="hint">Pulsa las zonas de la lesión activa (otra pulsación la quita). Para otra lesión, «Añadir lesión». Vejiga abierta hacia atrás, como en el esquema de la RTU: cúpula arriba, pared anterior desplegada a ambos lados, posterior en el centro sobre el trígono; el lado derecho del paciente a la izquierda. «Copiar» copia el texto y la imagen del mapa.</p>
+          <div id="mapv-map"></div>
+        </div>
+        <div class="result lm-list" aria-live="polite" id="mapv-list"></div>
+      </div>
+      <div class="ref">Zonas del diagrama vesical habitual en cistoscopia y RTU: trígono, meatos ureterales, paredes laterales, anterior y posterior, cúpula, cuello y uretra prostática. El número de lesiones y el tamaño de la mayor sirven para las tablas EORTC y de riesgo EAU. Esquema propio, no a escala.</div>
+    </article>
+
     <article class="card" id="c-vol" data-tab="prostata" data-keys="volumen prostatico elipsoide densidad psad psa density resonancia ecografia">
       <div class="card-h">
         <div><span class="kind">Fórmula</span><h2>Volumen prostático y densidad de PSA</h2></div>
@@ -4232,10 +4302,252 @@ const CTCAE_TAGS = [['A', 'ARTA y ADT'], ['I', 'Inmunoterapia'], ['Q', 'Quimiote
     });
   }
 
+
+  /* ---------- Mapas de lesiones (próstata y vejiga) ---------- */
+  const LES_COL = ['#e8590c', '#1c7ed6', '#2f9e44', '#ae3ec9', '#c2255c', '#0c8599'];
+  const yJoin = a => a.length < 2 ? a.join('') : a.slice(0, -1).join(', ') + ' y ' + a[a.length - 1];
+  const sizeTxt = s => { const n = UC.num(s); return n > 0 ? fmt(n, n % 1 ? 1 : 0) : ''; };
+
+  // Sectores PI-RADS v2.1: tres cortes axiales, anterior arriba, derecha del paciente a la izquierda.
+  function prostSvg() {
+    const W = 320, cx = 160;
+    const secs = [
+      { k: 'b', n: 'Base', rx: 140, ry: 74, tz: [0.36, 0.6], parts: [['afs', 235, 270], ['pza', 180, 235], ['pzpl', 125, 180], ['cz', 90, 125]] },
+      { k: 'm', n: 'Tercio medio', rx: 132, ry: 68, tz: [0.34, 0.58], parts: [['afs', 240, 270], ['pza', 185, 240], ['pzpl', 116, 185], ['pzpm', 90, 116]] },
+      { k: 'a', n: 'Ápex', rx: 108, ry: 58, tz: [0.31, 0.52], parts: [['afs', 240, 270], ['pza', 185, 240], ['pzpl', 118, 185], ['pzpm', 90, 118]] },
+    ];
+    const LBL = { afs: 'AFS', pza: 'PZa', pzpl: 'PZpl', pzpm: 'PZpm', cz: 'CZ' };
+    const CLS = { afs: 'z-afs', pza: 'z-pz', pzpl: 'z-pz', pzpm: 'z-pz2', cz: 'z-cz' };
+    const r1 = x => Math.round(x * 10) / 10;
+    let y0 = 0, defs = '', body = '', labels = '';
+    secs.forEach(s => {
+      const cy = y0 + 26 + s.ry, cyT = cy - 0.12 * s.ry;
+      const P = t => { const a = t * Math.PI / 180; return `${r1(cx + s.rx * Math.cos(a))},${r1(cy + s.ry * Math.sin(a))}`; };
+      const at = (t, f) => { const a = t * Math.PI / 180; return [r1(cx + f * s.rx * Math.cos(a)), r1(cy + f * s.ry * Math.sin(a))]; };
+      body += `<text x="6" y="${y0 + 12}" class="lm-ttl">${s.n}</text><text x="8" y="${cy}">D</text><text x="${W - 8}" y="${cy}">I</text>`;
+      s.parts.forEach(([sec, t1, t2]) => {
+        [['d', t1, t2], ['i', 180 - t2, 180 - t1]].forEach(([side, a, b]) => {
+          body += `<path data-z="${s.k}-${sec}-${side}" class="${CLS[sec]}" d="M${cx},${r1(cyT)} L${P(a)} A${s.rx},${s.ry} 0 0 1 ${P(b)} Z"/>`;
+          const [lx, ly] = at((a + b) / 2, sec === 'cz' ? 0.72 : sec === 'afs' ? 0.86 : sec === 'pza' ? 0.9 : 0.8);
+          labels += `<text x="${lx}" y="${ly}">${LBL[sec]}</text>`;
+        });
+      });
+      const trx = s.rx * s.tz[0], tro = s.ry * s.tz[1];
+      defs += `<clipPath id="lm-ta-${s.k}"><rect x="0" y="${y0}" width="${W}" height="${r1(cyT - y0)}"/></clipPath><clipPath id="lm-tp-${s.k}"><rect x="0" y="${r1(cyT)}" width="${W}" height="${r1(s.ry * 2 + 40)}"/></clipPath>`;
+      [['d', cx - trx], ['i', cx + trx]].forEach(([side, ex]) => {
+        body += `<ellipse class="lm-bg" cx="${r1(ex)}" cy="${r1(cyT)}" rx="${r1(trx)}" ry="${r1(tro)}"/><ellipse data-z="${s.k}-tza-${side}" class="z-tz" clip-path="url(#lm-ta-${s.k})" cx="${r1(ex)}" cy="${r1(cyT)}" rx="${r1(trx)}" ry="${r1(tro)}"/>` +
+          `<ellipse data-z="${s.k}-tzp-${side}" class="z-tz2" clip-path="url(#lm-tp-${s.k})" cx="${r1(ex)}" cy="${r1(cyT)}" rx="${r1(trx)}" ry="${r1(tro)}"/>`;
+        labels += `<text x="${r1(ex)}" y="${r1(cyT - 0.38 * tro)}">TZa</text><text x="${r1(ex)}" y="${r1(cyT + 0.42 * tro)}">TZp</text>`;
+      });
+      body += `<circle class="lm-ur" cx="${cx}" cy="${r1(cyT)}" r="4"/>`;
+      y0 = cy + s.ry + 8;
+    });
+    return `<svg class="lm-svg" viewBox="0 0 ${W} ${Math.ceil(y0)}" role="img" aria-label="Mapa de sectores prostáticos PI-RADS v2.1"><defs>${defs}</defs>${body}${labels}</svg>`;
+  }
+
+  // Vejiga abierta hacia atrás: la cúpula arriba, la pared anterior desplegada en las puntas laterales,
+  // la posterior en el centro con el trígono; derecha del paciente a la izquierda.
+  function bladderSvg() {
+    const out = 'M72,104 L248,104 C272,116 292,134 310,154 C288,204 232,244 182,268 L138,268 C88,244 32,204 10,154 C28,134 48,116 72,104 Z';
+    const c = 'clip-path="url(#lm-bl)"';
+    // Cada zona lleva debajo una copia opaca para que los rellenos translúcidos no se mezclen.
+    const z = (tag, attrs, key, cls, clip = true) => `<${tag} class="lm-bg" ${clip ? c : ''} ${attrs}/><${tag} data-z="${key}" class="${cls}" ${clip ? c : ''} ${attrs}/>`;
+    return `<svg class="lm-svg" viewBox="0 0 320 352" role="img" aria-label="Mapa vesical"><defs><clipPath id="lm-bl"><path d="${out}"/></clipPath>
+      <pattern id="lm-hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(35)"><rect width="6" height="6" fill="#8ce99a" fill-opacity="0.45"/><line x1="0" y1="0" x2="0" y2="6" stroke="#2b8a3e" stroke-opacity="0.35" stroke-width="1.4"/></pattern></defs>
+      <rect class="lm-uraco" x="155" y="12" width="10" height="24" rx="3"/>
+      ${z('path', 'd="M72,106 C72,22 248,22 248,106 Z"', 'cupula', 'z-dome', false)}
+      ${z('polygon', 'points="0,0 112,0 112,210 160,264 160,352 0,352"', 'latd', 'z-pz')}
+      ${z('polygon', 'points="320,0 208,0 208,210 160,264 160,352 320,352"', 'lati', 'z-pz')}
+      ${z('path', 'd="M62,100 L66,232 L0,232 L0,100 Z"', 'ant', 'z-afs')}
+      ${z('path', 'd="M258,100 L254,232 L320,232 L320,100 Z"', 'ant', 'z-afs')}
+      ${z('path', 'd="M100,104 L220,104 C230,150 222,188 208,210 L112,210 C98,188 90,150 100,104 Z"', 'post', 'z-pz2')}
+      ${z('polygon', 'points="112,210 208,210 160,262"', 'trig', 'z-tz')}
+      ${z('rect', 'x="116" y="250" width="88" height="22"', 'cuello', 'z-tz2')}
+      ${z('circle', 'cx="124" cy="214" r="11"', 'md', 'z-cz', false)}
+      ${z('circle', 'cx="196" cy="214" r="11"', 'mi', 'z-cz', false)}
+      <path class="lm-pr" d="M156,270 C120,268 112,300 124,322 C132,338 152,340 156,334 Z"/><path class="lm-pr" d="M164,270 C200,268 208,300 196,322 C188,338 168,340 164,334 Z"/>
+      ${z('rect', 'x="152" y="268" width="16" height="78" rx="6"', 'uretra', 'z-pz2', false)}
+      <path class="lm-out" d="${out}"/>
+      <text x="160" y="72">Cúpula</text><text x="160" y="150">Posterior</text>
+      <text x="88" y="182" class="lm-sm">Lateral D</text><text x="232" y="182" class="lm-sm">Lateral I</text>
+      <text x="34" y="150" class="lm-sm">Anterior</text><text x="286" y="150" class="lm-sm">Anterior</text>
+      <text x="160" y="231">Trígono</text><text x="124" y="214" class="lm-sm">MD</text><text x="196" y="214" class="lm-sm">MI</text>
+      <text x="160" y="262" class="lm-sm">Cuello</text><text x="208" y="320" class="lm-sm lm-l">Uretra prostática</text>
+      <text x="8" y="14" class="lm-sm lm-l">Derecha</text><text x="312" y="14" class="lm-sm lm-r">Izquierda</text>
+    </svg>`;
+  }
+
+  const PR_SEC = { afs: 'estroma fibromuscular anterior', tza: 'zona transicional anterior', tzp: 'zona transicional posterior', cz: 'zona central', pza: 'zona periférica anterior', pzpl: 'zona periférica posterolateral', pzpm: 'zona periférica posteromedial' };
+  const PR_LV = { b: 'base', m: 'tercio medio', a: 'ápex' };
+  function prostZones(z) {
+    const parts = [];
+    ['b', 'm', 'a'].forEach(l => {
+      const items = [];
+      Object.keys(PR_SEC).forEach(sec => {
+        const d = z.includes(`${l}-${sec}-d`), i = z.includes(`${l}-${sec}-i`), m = sec === 'afs';
+        if (d && i) items.push(PR_SEC[sec] + ' bilateral');
+        else if (d) items.push(PR_SEC[sec] + (m ? ' derecho' : ' derecha'));
+        else if (i) items.push(PR_SEC[sec] + (m ? ' izquierdo' : ' izquierda'));
+      });
+      if (items.length) parts.push(`${PR_LV[l]}: ${yJoin(items)}`);
+    });
+    const vd = z.includes('vs-d'), vi = z.includes('vs-i'), ex = [];
+    if (vd && vi) ex.push('ambas vesículas seminales'); else if (vd) ex.push('vesícula seminal derecha'); else if (vi) ex.push('vesícula seminal izquierda');
+    if (z.includes('esf')) ex.push('esfínter uretral externo');
+    if (ex.length) parts.push(yJoin(ex));
+    return parts.join('; ');
+  }
+  const BL_Z = { cupula: 'cúpula', ant: 'pared anterior', post: 'pared posterior', latd: 'pared lateral derecha', lati: 'pared lateral izquierda', trig: 'trígono', md: 'meato ureteral derecho', mi: 'meato ureteral izquierdo', cuello: 'cuello vesical', uretra: 'uretra prostática' };
+  const bladZones = z => yJoin(Object.keys(BL_Z).filter(k => z.includes(k)).map(k => BL_Z[k]));
+  const isMus = () => $('#mapp-mod').value === 'mus';
+  const plural = n => `${n} ${n === 1 ? 'lesión' : 'lesiones'}`;
+
+  const MAPS = {
+    mapp: {
+      svg: prostSvg, unit: 'mm', zones: prostZones,
+      xLabel: () => isMus() ? 'PRI-MUS' : 'PI-RADS', xOpts: ['', '1', '2', '3', '4', '5'],
+      title: () => isMus() ? 'Micro-ecografía de próstata (microUS)' : 'RM de próstata',
+      line: l => { const a = [l.x && (isMus() ? 'PRI-MUS ' : 'PI-RADS ') + l.x, sizeTxt(l.size) && sizeTxt(l.size) + ' mm'].filter(Boolean);
+        return `Lesión ${l.n}${a.length ? ' (' + a.join(', ') + ')' : ''}${l.z.length ? ': ' + prostZones(l.z) : ''}.`; },
+      head: les => `${MAPS.mapp.title()}, localización según el mapa de sectores PI-RADS v2.1 (${plural(les.length)}):`,
+    },
+    mapv: {
+      svg: bladderSvg, unit: 'cm', zones: bladZones,
+      xLabel: () => 'Aspecto', xOpts: ['', 'papilar', 'sólido', 'sésil', 'plano o eritematoso (sospecha de CIS)'],
+      title: () => 'Mapa vesical',
+      line: l => { const a = [l.x, sizeTxt(l.size) && sizeTxt(l.size) + ' cm'].filter(Boolean);
+        return `Lesión ${l.n}${a.length ? ' (' + a.join(', ') + ')' : ''}${l.z.length ? ': ' + bladZones(l.z) : ''}.`; },
+      head: les => { const sz = les.map(l => UC.num(l.size)).filter(n => n > 0), mx = sz.length ? Math.max(...sz) : 0;
+        return `Mapa vesical (${plural(les.length)}${mx ? `, la mayor de ${fmt(mx, mx % 1 ? 1 : 0)} cm` : ''}):`; },
+    },
+  };
+
+  // Imagen PNG del mapa con la leyenda de lesiones, para pegar o guardar junto al texto.
+  const MAP_IMG = {};
+  function mapCanvas(key, items) {
+    const svg = $(`#c-${key} .lm-svg`), clone = svg.cloneNode(true);
+    const src = [svg, ...svg.querySelectorAll('*')], dst = [clone, ...clone.querySelectorAll('*')];
+    src.forEach((el, i) => {
+      const cs = getComputedStyle(el), d = dst[i], tag = el.tagName.toLowerCase();
+      if (tag === 'text') {
+        d.setAttribute('fill', el.classList.contains('lm-ttl') ? '#586274' : '#1f2937');
+        d.setAttribute('font-family', 'Arial, Helvetica, sans-serif'); d.setAttribute('font-size', cs.fontSize); d.setAttribute('font-weight', cs.fontWeight);
+        d.setAttribute('text-anchor', cs.textAnchor); d.setAttribute('dominant-baseline', 'middle');
+      } else if (['path', 'rect', 'polygon', 'ellipse', 'circle', 'line'].includes(tag) && !el.closest('clipPath, pattern')) {
+        let fill = cs.fill;
+        if (el.classList.contains('lm-bg')) fill = '#ffffff';
+        if (el.classList.contains('lm-pr') || el.classList.contains('lm-uraco')) fill = '#f1f3f5';
+        if (fill.startsWith('url(')) fill = 'url(#lm-hatch)';
+        d.setAttribute('fill', fill); d.setAttribute('fill-opacity', cs.fillOpacity);
+        d.setAttribute('stroke', cs.stroke === 'none' ? 'none' : el.classList.contains('act') ? cs.stroke : '#1f2937');
+        d.setAttribute('stroke-opacity', cs.strokeOpacity); d.setAttribute('stroke-width', cs.strokeWidth);
+      } else return;
+      d.removeAttribute('class'); d.removeAttribute('style');
+    });
+    const [, , vw, vh] = svg.getAttribute('viewBox').split(' ').map(Number), k = 2;
+    clone.setAttribute('xmlns', 'http://www.w3.org/2000/svg'); clone.setAttribute('width', vw * k); clone.setAttribute('height', vh * k);
+    const url = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(new XMLSerializer().serializeToString(clone));
+    return new Promise((res, rej) => {
+      const img = new Image();
+      img.onload = () => {
+        const W = Math.max(vw * k, 640), pad = 24, cv = document.createElement('canvas'), ctx = cv.getContext('2d');
+        const font = 'px Arial, Helvetica, sans-serif', fs = 22, lh = 30, wrapW = W - pad * 2 - 34;
+        ctx.font = fs + font;
+        const lines = [];
+        items.forEach(it => {
+          let cur = '', first = true;
+          it.text.split(' ').forEach(w => {
+            const t = cur ? cur + ' ' + w : w;
+            if (ctx.measureText(t).width > wrapW && cur) { lines.push({ c: first ? it.color : null, t: cur }); first = false; cur = w; } else cur = t;
+          });
+          lines.push({ c: first ? it.color : null, t: cur });
+        });
+        const top = 60, H = top + vh * k + 16 + lines.length * lh + pad;
+        cv.width = W; cv.height = H;
+        ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, W, H);
+        ctx.fillStyle = '#1f2937'; ctx.font = 'bold 26' + font; ctx.textBaseline = 'middle';
+        ctx.fillText(MAPS[key].title(), pad, 30);
+        ctx.drawImage(img, (W - vw * k) / 2, top);
+        ctx.font = fs + font;
+        lines.forEach((l, i) => {
+          const y = top + vh * k + 16 + i * lh + lh / 2;
+          if (l.c) { ctx.fillStyle = l.c; ctx.fillRect(pad, y - 10, 20, 20); }
+          ctx.fillStyle = '#1f2937'; ctx.fillText(l.t, pad + 34, y);
+        });
+        res(cv);
+      };
+      img.onerror = rej;
+      img.src = url;
+    });
+  }
+
+  function lesionMap(key) {
+    const c = MAPS[key], card = $('#c-' + key), list = $(`#${key}-list`), mod = card.querySelector('[data-mod]');
+    const st = { les: [], act: 0 };
+    const blank = () => ({ z: [], size: '', x: '' });
+    $(`#${key}-map`).innerHTML = c.svg();
+    const filled = () => st.les.map((l, i) => ({ ...l, n: i + 1, color: LES_COL[i % LES_COL.length] })).filter(l => l.z.length || UC.num(l.size) > 0 || l.x);
+    function paint() {
+      $$('[data-z]', card).forEach(el => {
+        const k = el.dataset.z, i = st.les.findIndex(l => l.z.includes(k));
+        el.classList.toggle('on', i >= 0);
+        el.classList.toggle('act', !!st.les[st.act] && st.les[st.act].z.includes(k));
+        el.style.setProperty('--lc', i >= 0 ? LES_COL[i % LES_COL.length] : '');
+      });
+    }
+    function txt() {
+      const les = filled();
+      copyText[key] = les.length ? c.head(les) + ' ' + les.map(c.line).join(' ') : '';
+    }
+    MAP_IMG[key] = () => { const les = filled(); return mapCanvas(key, les.map(l => ({ color: l.color, text: c.line(l) }))); };
+    function render() {
+      list.innerHTML = st.les.map((l, i) => `<div class="lm-les${i === st.act ? ' act' : ''}" style="--lc:${LES_COL[i % LES_COL.length]}">
+          <div class="lm-head"><button type="button" class="lm-tag" data-a="sel" data-i="${i}">Lesión ${i + 1}${i === st.act ? ' · activa' : ''}</button>
+          <button type="button" class="lm-del" data-a="del" data-i="${i}" title="Quitar lesión" aria-label="Quitar lesión ${i + 1}">×</button></div>
+          <p class="lm-z">${l.z.length ? esc(c.zones(l.z)) : 'Pulsa en el mapa las zonas afectadas.'}</p>
+          <div class="lm-f"><label class="field"><span>Tamaño</span><span class="unit"><input inputmode="decimal" autocomplete="off" data-a="size" data-i="${i}" value="${esc(l.size)}"><i>${c.unit}</i></span></label>
+          <label class="field"><span>${c.xLabel()}</span><select data-a="x" data-i="${i}">${c.xOpts.map(o => `<option value="${esc(o)}"${o === l.x ? ' selected' : ''}>${o ? esc(o[0].toUpperCase() + o.slice(1)) : '—'}</option>`).join('')}</select></label></div>
+        </div>`).join('') + `<button type="button" class="btn" data-a="add">+ Añadir lesión</button>`;
+      paint(); txt();
+    }
+    card.addEventListener('click', e => {
+      const z = e.target.closest('[data-z]'), a = e.target.closest('[data-a]');
+      if (z) {
+        if (!st.les.length) { st.les.push(blank()); st.act = 0; }
+        const l = st.les[st.act], k = z.dataset.z, j = l.z.indexOf(k);
+        if (j >= 0) l.z.splice(j, 1); else l.z.push(k);
+        render();
+      } else if (a && a.tagName === 'BUTTON') {
+        const i = +a.dataset.i;
+        if (a.dataset.a === 'add') { st.les.push(blank()); st.act = st.les.length - 1; }
+        else if (a.dataset.a === 'sel') st.act = i;
+        else if (a.dataset.a === 'del') { st.les.splice(i, 1); if (!st.les.length) st.les.push(blank()); st.act = Math.min(st.act, st.les.length - 1); }
+        render();
+      }
+    });
+    const field = e => { const a = e.target.closest('[data-a]'); if (!a || !list.contains(a)) return; const l = st.les[+a.dataset.i]; if (!l) return;
+      if (a.dataset.a === 'size') l.size = a.value; else if (a.dataset.a === 'x') l.x = a.value; txt(); };
+    list.addEventListener('input', field); list.addEventListener('change', field);
+    if (mod) mod.addEventListener('change', render);
+    // Botón para guardar la imagen (por si la historia no admite pegar imágenes).
+    const copyBtn = card.querySelector('.card-h .copy'), wrap = document.createElement('div'), save = document.createElement('button');
+    wrap.className = 'card-btns'; copyBtn.replaceWith(wrap);
+    save.className = 'btn'; save.type = 'button'; save.textContent = 'Guardar imagen'; save.title = 'Descarga el mapa con la leyenda en PNG';
+    save.addEventListener('click', () => {
+      if (!filled().length) { save.textContent = 'Faltan datos'; setTimeout(() => { save.textContent = 'Guardar imagen'; }, 1400); return; }
+      MAP_IMG[key]().then(cv => { const a = document.createElement('a'); a.download = (key === 'mapp' ? 'mapa-prostata' : 'mapa-vesical') + '.png'; a.href = cv.toDataURL('image/png'); a.click(); });
+    });
+    wrap.append(save, copyBtn);
+    const reset = () => { st.les = [blank()]; st.act = 0; if (mod) mod.selectedIndex = 0; render(); };
+    $('#clear-all').addEventListener('click', reset);
+    reset();
+  }
+  lesionMap('mapp'); lesionMap('mapv');
+
   /* ---------- Pestañas y búsqueda ---------- */
   const norm = s => s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
-  const ORDER = ['c-rpcrc', 'c-vol', 'c-riesgo', 'c-psadt', 'c-brig', 'c-capras', 'c-bcr', 'c-lk-prostata', 'c-ctcae', 'c-inter',
-    'c-lk-vejiga', 'c-nmibc', 'c-eortc', 'c-bcgu', 'c-renalns', 'c-padua', 'c-leib', 'c-imdc',
+  const ORDER = ['c-rpcrc', 'c-vol', 'c-mapp', 'c-riesgo', 'c-psadt', 'c-brig', 'c-capras', 'c-bcr', 'c-lk-prostata', 'c-ctcae', 'c-inter',
+    'c-lk-vejiga', 'c-mapv', 'c-nmibc', 'c-eortc', 'c-bcgu', 'c-renalns', 'c-padua', 'c-leib', 'c-imdc',
     'c-ipss', 'c-oabq', 'c-iciq', 'c-bpic', 'c-uds', 'c-noct', 'c-shim', 'c-ehs', 'c-iief', 'c-ft', 'c-popq', 'c-pot', 'c-lk-suelo',
     'c-fu-prostata', 'c-fu-nmibc', 'c-fu-mibc', 'c-fu-utuc', 'c-fu-rinon', 'c-fu-testiculo', 'c-fu-pene', 'c-fu-uretra',
     'c-ps', 'c-g8', 'c-cci', 'c-renal', 'c-sc', 'c-conv'];
@@ -4273,6 +4585,15 @@ const CTCAE_TAGS = [['A', 'ARTA y ADT'], ['I', 'Inmunoterapia'], ['Q', 'Quimiote
       try { document.execCommand('copy'); ok(); } catch (e) { btn.textContent = 'No se pudo copiar'; }
       ta.remove();
     };
+    const img = MAP_IMG[btn.dataset.copy];
+    if (img && window.ClipboardItem && navigator.clipboard && navigator.clipboard.write) {
+      const cv = img();
+      const png = cv.then(c => new Promise(r => c.toBlob(r, 'image/png')));
+      const html = cv.then(c => new Blob([`<p>${esc(txt)}</p><p><img src="${c.toDataURL('image/png')}" width="${c.width / 2}" alt="Mapa de lesiones"></p>`], { type: 'text/html' }));
+      navigator.clipboard.write([new ClipboardItem({ 'text/plain': new Blob([txt], { type: 'text/plain' }), 'text/html': html, 'image/png': png })])
+        .then(ok, () => navigator.clipboard.writeText(txt).then(ok, fallback));
+      return;
+    }
     if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(txt).then(ok, fallback); else fallback();
   }));
 
